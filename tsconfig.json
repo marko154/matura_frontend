@@ -15,9 +15,7 @@
     "types": [
       "vite/client",
       "node",
-      "reflect-metadata",
-      "jest",
-      "mocha"
+      "jest"
     ]
   },
   "include": [

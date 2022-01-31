@@ -1,3 +1,5 @@
 import { dict } from ".";
 
-test(() => {});
+test("all translations should have same fields", () => {
+	console.log("testing", dict);
+});
