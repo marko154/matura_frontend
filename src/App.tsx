@@ -1,27 +1,28 @@
-import type { Component } from 'solid-js';
-
-import logo from './logo.svg';
-import styles from './App.module.css';
+import { Component } from "solid-js";
+import { I18nProvider } from "@amoutonbrady/solid-i18n";
+import { Router, useRoutes } from "solid-app-router";
+import { privateOnlyRoutes, publicOnlyRoutes, neutralRoutes } from "./routes";
+import { dict } from "./translations";
+import { AuthProvider, useAuth } from "./context/AuthProvider";
+import { Sidemenu } from "./components/Sidemen/Sidemenu";
 
 const App: Component = () => {
-  return (
-    <div class={styles.App}>
-      <header class={styles.header}>
-        <img src={logo} class={styles.logo} alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Solid
-        </a>
-      </header>
-    </div>
-  );
+	const Routes = useRoutes([
+		...privateOnlyRoutes,
+		...publicOnlyRoutes,
+		...neutralRoutes,
+	]);
+
+	return (
+		<I18nProvider dict={dict} locale={"en"}>
+			<Router>
+				<AuthProvider>
+					{useAuth()[0].user && <Sidemenu />}
+					<Routes />
+				</AuthProvider>
+			</Router>
+		</I18nProvider>
+	);
 };
 
 export default App;
