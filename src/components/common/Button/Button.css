@@ -14,9 +14,9 @@
 	.google {
 		@apply bg-white text-primary hover:bg-light-blue transition-colors outline-none focus:ring border border-primary;
 	}
+}
 
-	.loading {
-		position: relative;
-		color: transparent;
-	}
+.loading {
+	position: relative;
+	color: transparent;
 }

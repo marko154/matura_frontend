@@ -1,6 +1,6 @@
 import { useI18n } from "@amoutonbrady/solid-i18n";
 import { NavLink } from "solid-app-router";
-import { Component, createMemo, createSignal, For } from "solid-js";
+import { Component, createMemo, For } from "solid-js";
 import { ROLE_SIDEMENU } from "../../constants/sidemenu";
 import { useAuth } from "../../context/AuthProvider";
 import { Avatar } from "../common/Avatar";
@@ -9,7 +9,7 @@ import { Icon } from "../common/Icon";
 export const Sidemenu: Component = () => {
 	const [auth, { logout }] = useAuth();
 	// const [width, setWidth] = createSignal(250); // TODO: make menu resizable
-	const [t] = useI18n();
+	const [t, { locale }] = useI18n();
 
 	const sidemenu = createMemo(() => {
 		if (!auth.user?.user_type_id) return [];
@@ -17,12 +17,21 @@ export const Sidemenu: Component = () => {
 	});
 
 	return (
-		<menu className="bg-primary w-60 h-full text-white relative">
-			<div className="mx-5 my-6 mt-4">
-				<button class="ml-auto block" onClick={() => logout()}>
-					<Icon name="logout" className="rotate-180" />
-				</button>
-				<div className="flex gap-x-1 truncate -mt-3">
+		<menu className="bg-primary w-64 h-full text-white relative">
+			<div className="mx-5 mb-7 mt-3">
+				<div className="flex justify-end">
+					<Icon
+						name="translate"
+						className="cursor-pointer"
+						onClick={() => locale(locale() === "en" ? "sl" : "en")}
+					/>
+					<Icon
+						onClick={() => logout()}
+						className="rotate-180 cursor-pointer"
+						name="logout"
+					/>
+				</div>
+				<div className="flex gap-x-1 truncate -mt-2">
 					<Avatar imageURL={auth.user?.avatar_url} />
 					<div className="flex flex-col justify-center">
 						<div className="text-xl leading-none">
@@ -42,7 +51,7 @@ export const Sidemenu: Component = () => {
 							href={item.path}
 							activeClass="bg-blue-600"
 							end={item.end}
-							className="hover:bg-blue-600 text-xl pl-5 py-2"
+							className="hover:bg-blue-600 text-lg pl-6 py-2"
 						>
 							{t(item.text)}
 						</NavLink>

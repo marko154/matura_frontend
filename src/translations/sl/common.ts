@@ -14,4 +14,7 @@ export default {
 		mentors: "Mentorji",
 		patients: "Oskrbovanci",
 	},
+	mentor: {
+		createMentor: "Ustvari Mentorja",
+	},
 };

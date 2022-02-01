@@ -7,6 +7,9 @@ const Home = lazy(() => import("../components/Home/Home"));
 const Caregivers = lazy(() => import("../components/Caregivers/Caregivers"));
 const Patients = lazy(() => import("../components/Patients/Patients"));
 const Mentors = lazy(() => import("../components/Mentors/Mentors"));
+const CreateMentor = lazy(
+	() => import("../components/CreateMentor/CreateMentor")
+);
 const PageNotFound = lazy(
 	() => import("../components/PageNotFound/PageNotFound")
 );
@@ -39,6 +42,11 @@ const privateOnlyRoutes: Route[] = [
 		path: "/mentors",
 		name: "Mentors",
 		component: Mentors,
+	},
+	{
+		path: "/mentor/create",
+		name: "Create Mentor",
+		component: CreateMentor,
 	},
 ].map((route) => ({
 	...route,

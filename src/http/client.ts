@@ -2,9 +2,13 @@ import { ACCESS_TOKEN_KEY } from "../constants/localStorage";
 
 type Config = Omit<RequestInit, "body"> & {
 	body?: object;
+	URLParams?: Record<string, string | number>;
 };
 
-function client(endpoint: string, { body, ...customConfig }: Config = {}) {
+function client(
+	endpoint: string,
+	{ body, URLParams, ...customConfig }: Config = {}
+) {
 	const token = window.localStorage.getItem(ACCESS_TOKEN_KEY);
 	const headers: HeadersInit = { "content-type": "application/json" };
 	if (token) {
@@ -23,8 +27,14 @@ function client(endpoint: string, { body, ...customConfig }: Config = {}) {
 		config.body = JSON.stringify(body);
 	}
 
+	let params = "";
+	if (URLParams) {
+		params = `?${new URLSearchParams(URLParams as Record<string, string>)}`;
+	}
+	const base = import.meta.env.SOLID_APP_API_URL;
+
 	return window
-		.fetch(`${import.meta.env.SOLID_APP_API_URL}/${endpoint}`, config)
+		.fetch(`${base}/${endpoint}${params}`, config)
 		.then(async (response) => {
 			if (response.ok) {
 				return await response.json();

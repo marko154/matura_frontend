@@ -1,17 +1,21 @@
+import { Component, createResource } from "solid-js";
 import { useI18n } from "@amoutonbrady/solid-i18n";
-import { Component } from "solid-js";
 import { MainWrapper } from "../common/MainWrapper";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { CaregiversMap } from "./CaregiversMap";
+import { getCaregivers } from "../../http/caregivers";
 
 const Caregivers: Component = () => {
 	const [t] = useI18n();
+	const [caregivers, {}] = createResource(getCaregivers);
 
 	return (
-		<MainWrapper title={t("sidebar.caregivers")}>
+		<MainWrapper
+		// title={t("sidebar.caregivers")}
+		>
 			<div className="flex flex-1">
 				<CaregiversMap />
-				<Sidebar className="w-96 flex-0 border-l-2"></Sidebar>
+				<Sidebar className=""></Sidebar>
 			</div>
 		</MainWrapper>
 	);

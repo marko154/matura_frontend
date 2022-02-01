@@ -5,16 +5,6 @@ import { Loader } from "../components/common/Loader/Loader";
 import { ACCESS_TOKEN_KEY } from "../constants/localStorage";
 import * as http from "../http/auth";
 
-interface User {
-	user_id: number;
-	user_type_id: number;
-	email: string;
-	display_name?: string;
-	avatar_url?: string;
-	email_validated: boolean;
-	locale: string;
-}
-
 interface AuthState {
 	user: User | null;
 	loading: boolean;
@@ -83,4 +73,4 @@ const AuthProvider: Component = (props) => {
 
 const useAuth = () => useContext(AuthContext);
 
-export { AuthProvider, useAuth, User };
+export { AuthProvider, useAuth };

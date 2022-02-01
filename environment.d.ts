@@ -7,6 +7,25 @@ declare global {
 			SOLID_APP_MAPBOX_API_KEY: string;
 		}
 	}
+
+	interface User {
+		user_id: number;
+		user_type_id: number;
+		email: string;
+		display_name?: string;
+		avatar_url?: string;
+		email_validated: boolean;
+		locale: string;
+	}
+	interface Mentor {
+		first_name: string;
+		last_name: string;
+		date_of_birth: string | Date;
+		emso: string;
+		phone_number: string;
+		gender: "MALE" | "FEMALE";
+		date_created?: string | Date | undefined;
+	}
 }
 
 // If this file has no import/export statements (i.e. is a script)

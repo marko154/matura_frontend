@@ -8,10 +8,18 @@ export default {
 	continueWithGoogle: "Continue with Google",
 	alreadyHaveAcc: "Already have an account?",
 	dontHaveAcc: "Don't have an account?",
+	firstName: "First Name",
+	lastName: "Last Name",
+	phoneNumber: "Phone Number",
+	dateOfBirth: "Date of Birth",
+	create: "Create",
 	sidebar: {
 		home: "Home",
 		caregivers: "Caregivers",
 		mentors: "Mentors",
 		patients: "Patients",
+	},
+	mentor: {
+		createMentor: "Create a Mentor",
 	},
 };

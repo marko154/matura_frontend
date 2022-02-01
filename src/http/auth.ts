@@ -1,4 +1,3 @@
-import { User } from "../context/AuthProvider";
 import { client } from "./client";
 
 const register = async (userData: { email: string; password: string }) => {

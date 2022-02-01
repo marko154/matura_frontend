@@ -10,7 +10,7 @@ type ButtonProps = JSX.IntrinsicElements["button"] & {
 const Button: Component<ButtonProps> = ({
 	action = "primary",
 	loading,
-	className,
+	className = "",
 	children,
 	...props
 }) => {
