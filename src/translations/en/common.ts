@@ -11,8 +11,13 @@ export default {
 	firstName: "First Name",
 	lastName: "Last Name",
 	phoneNumber: "Phone Number",
+	gender: "Gender",
 	dateOfBirth: "Date of Birth",
 	create: "Create",
+	cancel: "Cancel",
+	confirm: "Confirm",
+	// use name as a variable "Are you sure you want to delete {{ name }}?"
+	confirmationNote: "Are you sure you want to delete this user?",
 	sidebar: {
 		home: "Home",
 		caregivers: "Caregivers",
@@ -21,5 +26,11 @@ export default {
 	},
 	mentor: {
 		createMentor: "Create a Mentor",
+	},
+	caregiver: {
+		createCaregiver: "Create a Caregiver",
+	},
+	patient: {
+		createPatient: "Create a Patient",
 	},
 };

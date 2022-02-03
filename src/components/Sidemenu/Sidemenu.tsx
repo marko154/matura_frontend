@@ -38,8 +38,10 @@ export const Sidemenu: Component = () => {
 							{auth.user?.display_name}
 						</div>
 						<div className="truncate leading-tight text-sm">
-							{auth.user?.email}
+							{/* {auth.user?.email} */}
+							Administrator
 						</div>
+						<Icon name="more_horiz" />
 					</div>
 				</div>
 			</div>

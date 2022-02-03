@@ -5,7 +5,7 @@
 @layer components {
 	.button {
 		@apply bg-primary text-white hover:bg-blue-700 transition-colors outline-none 
-		disabled:bg-opacity-70 disabled:hover:bg-primary
+		disabled:bg-opacity-70 disabled:hover:bg-primary block
 		focus:ring;
 		padding: 9px 12px;
 		border-radius: 5px;

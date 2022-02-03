@@ -1,6 +1,7 @@
 import { Component, For, onMount } from "solid-js";
 import mapboxgl from "mapbox-gl"; // or "const mapboxgl = require('mapbox-gl');"
 import "mapbox-gl/dist/mapbox-gl.css";
+import { Sidebar } from "../Sidebar/Sidebar";
 
 mapboxgl.accessToken = import.meta.env.SOLID_APP_MAPBOX_API_KEY;
 
@@ -18,5 +19,10 @@ export const CaregiversMap: Component = () => {
 			zoom: 8, // starting zoom
 		});
 	});
-	return <div id="map" className="flex-1"></div>;
+	return (
+		<div>
+			<div id="map" className="flex-1"></div>;
+			<Sidebar className=""></Sidebar>
+		</div>
+	);
 };

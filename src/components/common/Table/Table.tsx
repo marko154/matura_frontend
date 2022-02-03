@@ -4,35 +4,33 @@ import "./Table.css";
 type TableProps = JSX.IntrinsicElements["table"] & {};
 
 type Table = Component<TableProps> & {
-	Header: Component;
-	HeaderCell: Component;
-	Body: Component;
-	Row: Component;
-	Cell: Component;
+	Header: Component<JSX.IntrinsicElements["thead"]>;
+	Th: Component<JSX.IntrinsicElements["th"]>;
+	Body: Component<JSX.IntrinsicElements["tbody"]>;
+	Row: Component<JSX.IntrinsicElements["tr"]>;
+	Td: Component<JSX.IntrinsicElements["td"]>;
 };
 
-export const Table: Table = ({ className = "", ...rest }) => {
-	return (
-		<table className={`table-auto w-full ${className}`} {...rest}></table>
-	);
+export const Table: Table = (props) => {
+	return <table {...props}></table>;
 };
 
-Table.Header = ({ ...rest }) => {
-	return <thead className="bg-gray-100 rounded-2xl" {...rest}></thead>;
+Table.Header = (props) => {
+	return <thead {...props}></thead>;
 };
 
-Table.HeaderCell = ({ ...rest }) => {
-	return <th className="text-left" {...rest}></th>;
+Table.Th = (props) => {
+	return <th {...props}></th>;
 };
 
-Table.Body = ({ ...rest }) => {
-	return <tbody {...rest}></tbody>;
+Table.Body = (props) => {
+	return <tbody {...props}></tbody>;
 };
 
-Table.Row = ({ ...rest }) => {
-	return <tr {...rest}></tr>;
+Table.Row = (props) => {
+	return <tr {...props}></tr>;
 };
 
-Table.Cell = ({ ...rest }) => {
-	return <td {...rest}></td>;
+Table.Td = (props) => {
+	return <td {...props}></td>;
 };

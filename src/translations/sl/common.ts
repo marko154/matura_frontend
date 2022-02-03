@@ -8,6 +8,16 @@ export default {
 	continueWithGoogle: "Nadaljuj z Googlom",
 	alreadyHaveAcc: "Že imaš račun?",
 	dontHaveAcc: "Nimaš računa?",
+	firstName: "Ime",
+	lastName: "Priimek",
+	phoneNumber: "Telefonska Številka",
+	gender: "Spol",
+	dateOfBirth: "Datum Rojstva",
+	create: "Ustvari",
+	cancel: "Prekliči",
+	confirm: "Potrdi",
+	// use name as a variable "Are you sure you want to delete {{ name }}?"
+	confirmationNote: "ne vem?",
 	sidebar: {
 		home: "Nadzorna ploča",
 		caregivers: "Prostovoljci",

@@ -7,12 +7,17 @@ type MainWrapperProps = JSX.IntrinsicElements["main"] & {
 export const MainWrapper: Component<MainWrapperProps> = ({
 	title,
 	children,
+	// className="",
 	...rest
 }) => {
 	return (
-		<main className="flex flex-col flex-1 relative mx-12" {...rest}>
-			{title && <h1 className="text-3xl my-6 text-gray-700">{title}</h1>}
-			{children}
-		</main>
+		<div className="overflow-auto flex flex-1">
+			<main className="flex flex-col flex-1 relative mx-12" {...rest}>
+				{title && (
+					<h1 className="text-3xl my-6 text-gray-700">{title}</h1>
+				)}
+				{children}
+			</main>
+		</div>
 	);
 };

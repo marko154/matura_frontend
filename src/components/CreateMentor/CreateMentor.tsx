@@ -6,9 +6,11 @@ import createDebounce from "@solid-primitives/debounce";
 import { Input } from "../common/Input/Input";
 import { Button } from "../common/Button/Button";
 import { createMentor } from "../../http/mentors";
+import { useNavigate } from "solid-app-router";
 
 const CreateMentor: Component = () => {
 	const [t] = useI18n();
+	const navigate = useNavigate();
 	const [fn, cancel] = createDebounce(() => {}, 300);
 
 	const [mentor, setMentor] = createStore<Mentor & { email: string }>({
@@ -24,8 +26,8 @@ const CreateMentor: Component = () => {
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		try {
-			await createMentor(mentor);
-			console.log("success");
+			const { user } = await createMentor(mentor);
+			navigate(`/mentor/${user.user_id}`, { replace: true });
 		} catch (err) {
 			console.log(err);
 		}
@@ -35,9 +37,13 @@ const CreateMentor: Component = () => {
 		setMentor(e.target.name, e.target.value);
 	};
 
+	const canSubmit = () => {
+		return Object.values(mentor).every((val) => val !== "");
+	};
+
 	return (
 		<MainWrapper title={t("mentor.createMentor")}>
-			<form>
+			<form className="max-w-2xl">
 				<Input
 					type="email"
 					label={t("email")}
@@ -67,7 +73,13 @@ const CreateMentor: Component = () => {
 					onInput={handleChange}
 					name="date_of_birth"
 				/>
-				<Button onClick={handleSubmit}>{t("create")}</Button>
+				<Button
+					onClick={handleSubmit}
+					disabled={!canSubmit()}
+					className="block ml-auto mt-5"
+				>
+					{t("create")}
+				</Button>
 			</form>
 		</MainWrapper>
 	);

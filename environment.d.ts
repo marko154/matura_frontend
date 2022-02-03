@@ -18,6 +18,7 @@ declare global {
 		locale: string;
 	}
 	interface Mentor {
+		mentor_id?: number;
 		first_name: string;
 		last_name: string;
 		date_of_birth: string | Date;
@@ -25,6 +26,26 @@ declare global {
 		phone_number: string;
 		gender: "MALE" | "FEMALE";
 		date_created?: string | Date | undefined;
+	}
+
+	interface Patient {
+		patient_id?: number;
+		first_name: string;
+		last_name: string;
+		date_of_birth: Date | string;
+		emso: string;
+		email?: string | null;
+		phone_number?: string | null;
+		gender: "MALE" | "FEMALE";
+		details?: string | null;
+		date_created?: Date | string;
+		location?: Location;
+	}
+
+	interface Location {
+		location_id: string;
+		place_name: string;
+		coordinates: [number, number];
 	}
 }
 

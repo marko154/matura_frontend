@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from "solid-app-router";
 import { Component, Show } from "solid-js";
 import { useAuth } from "../context/AuthProvider";
-import { Sidemenu } from "./Sidemen/Sidemenu";
+import { Sidemenu } from "./Sidemenu/Sidemenu";
 
 export const RequireAuth: Component = (props) => {
 	const [auth] = useAuth();

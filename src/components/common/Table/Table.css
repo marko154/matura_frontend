@@ -3,12 +3,17 @@
 @tailwind utilities;
 
 table {
-	@apply text-gray-600;
+	@apply table-auto w-full text-gray-600;
+}
+
+table thead {
+	@apply bg-gray-100 rounded-2xl;
 }
 
 table th {
-	font-size: 15px;
-	padding: 10px 2rem;
+	@apply text-left text-base px-8;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 table th:first-child {
@@ -19,7 +24,18 @@ table th:last-child {
 	border-radius: 0 10px 10px 0;
 }
 
+table tbody tr:hover {
+	@apply hover:bg-gray-100;
+}
+
 table td {
-	font-size: 17px;
-	padding: 0.75rem 2rem;
+	@apply text-base px-8 py-5;
+}
+
+table td:first-child {
+	border-radius: 10px 0 0 10px;
+}
+
+table td:last-child {
+	border-radius: 0 10px 10px 0;
 }
