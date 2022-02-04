@@ -3,6 +3,7 @@ import { Component, createResource, Show } from "solid-js";
 import { getPatient } from "../../http/patient";
 import { Loader } from "../common/Loader/Loader";
 import { MainWrapper } from "../common/MainWrapper";
+import { Map } from "../common/Map";
 
 const Patient: Component = () => {
 	const params = useParams();
@@ -13,6 +14,8 @@ const Patient: Component = () => {
 		<MainWrapper title="Patient">
 			<Show when={!patient.loading} fallback={<Loader />}>
 				<h1>{patient().email}</h1>
+
+				<Map onResult={() => null} />
 			</Show>
 		</MainWrapper>
 	);

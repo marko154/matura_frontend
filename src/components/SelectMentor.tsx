@@ -5,9 +5,11 @@ import { Loader } from "./common/Loader/Loader";
 
 type SelectProps = JSX.IntrinsicElements["div"] & {
 	setMentor: (mentor: Mentor) => void;
+	mentorID: number;
 };
 
 export const SelectMentor: Component<SelectProps> = ({
+	mentorID,
 	setMentor,
 	...rest
 }) => {
@@ -29,12 +31,15 @@ export const SelectMentor: Component<SelectProps> = ({
 				<For each={data()!.mentors}>
 					{(mentor) => (
 						<tr
-							className="flex justify-between cursor-pointer px-4 py-2 hover:bg-gray-200"
+							className="cursor-pointer hover:bg-gray-200"
 							onClick={() => setMentor(mentor)}
+							classList={{
+								"bg-gray-200": mentor.mentor_id === mentorID,
+							}}
 						>
-							<td>{mentor.first_name}</td>
-							<td>{mentor.last_name}</td>
-							<td>{mentor.user.email}</td>
+							<td className="py-2">{mentor.first_name}</td>
+							<td className="py-2">{mentor.last_name}</td>
+							<td className="py-2">{mentor.user.email}</td>
 						</tr>
 					)}
 				</For>

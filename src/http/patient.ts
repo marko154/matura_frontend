@@ -19,3 +19,7 @@ export const getPatients = async (page: number): Promise<Response> => {
 		},
 	});
 };
+
+export const assignCaregiver = (session: Session) => {
+	return client("assign-caregiver", { body: session });
+};

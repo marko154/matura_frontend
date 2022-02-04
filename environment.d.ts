@@ -47,6 +47,14 @@ declare global {
 		place_name: string;
 		coordinates: [number, number];
 	}
+
+	interface Session {
+		session_id: number;
+		start_time: Date;
+		notes: string | null;
+		patient_id: number;
+		caregiver_id: number;
+	}
 }
 
 // If this file has no import/export statements (i.e. is a script)

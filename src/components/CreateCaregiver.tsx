@@ -10,6 +10,7 @@ import createDebounce from "@solid-primitives/debounce";
 import { TextArea } from "./common/TextArea";
 import { Map } from "./common/Map";
 import { SelectMentor } from "./SelectMentor";
+import { mentorSidemenu } from "../constants/sidemenu";
 
 const CreateCaregiver: Component = () => {
 	const [t] = useI18n();
@@ -104,13 +105,13 @@ const CreateCaregiver: Component = () => {
 				<Map onResult={handleMapResult} className="flex-1" />
 			</div>
 
-			<SelectMentor setMentor={handleSelectMentor} className="my-5" />
+			<SelectMentor
+				mentorID={caregiver.mentor_id}
+				setMentor={handleSelectMentor}
+				className="my-5"
+			/>
 
-			<Button
-				onClick={handleSubmit}
-				disabled={!canSubmit()}
-				className="w-fit"
-			>
+			<Button onClick={handleSubmit} disabled={!canSubmit()} className="w-fit">
 				{t("create")}
 			</Button>
 		</MainWrapper>
