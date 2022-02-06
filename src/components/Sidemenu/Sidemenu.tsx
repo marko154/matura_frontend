@@ -1,6 +1,6 @@
 import { useI18n } from "@amoutonbrady/solid-i18n";
 import { NavLink } from "solid-app-router";
-import { Component, createMemo, For } from "solid-js";
+import { Component, createMemo, createSignal, For } from "solid-js";
 import { ROLE_SIDEMENU } from "../../constants/sidemenu";
 import { useAuth } from "../../context/AuthProvider";
 import { Avatar } from "../common/Avatar";
@@ -9,6 +9,7 @@ import { Icon } from "../common/Icon";
 export const Sidemenu: Component = () => {
 	const [auth, { logout }] = useAuth();
 	// const [width, setWidth] = createSignal(250); // TODO: make menu resizable
+	const [isCollapsed, setIsCollapsed] = createSignal(false);
 	const [t, { locale }] = useI18n();
 
 	const sidemenu = createMemo(() => {
@@ -17,7 +18,12 @@ export const Sidemenu: Component = () => {
 	});
 
 	return (
-		<menu className="bg-primary w-64 h-full text-white relative">
+		<menu
+			className="bg-primary w-64 h-full text-white relative flex flex-col transition-all"
+			classList={{
+				"w-16": isCollapsed(),
+			}}
+		>
 			<div className="mx-5 mb-7 mt-3">
 				<div className="flex justify-end">
 					<Icon
@@ -46,7 +52,7 @@ export const Sidemenu: Component = () => {
 				</div>
 			</div>
 
-			<div className="grid">
+			<div className="flex flex-col flex-1">
 				<For each={sidemenu()}>
 					{(item) => (
 						<NavLink
@@ -62,6 +68,15 @@ export const Sidemenu: Component = () => {
 			</div>
 
 			{/* <div className="absolute top-0 bottom-0 -right-1 w-1 hover:bg-indigo-900 cursor-col-resize"></div> */}
+
+			<div className="mt-auto flex">
+				<Icon
+					name="arrow_back_ios"
+					className="ml-auto p-3 mr-2 text-sm cursor-pointer hover:bg-blue-700 rounded-full transition-transform"
+					classList={{ "rotate-180": isCollapsed() }}
+					onClick={() => setIsCollapsed((p) => !p)}
+				/>
+			</div>
 		</menu>
 	);
 };

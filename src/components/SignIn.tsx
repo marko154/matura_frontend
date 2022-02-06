@@ -10,7 +10,7 @@ import { Link } from "solid-app-router";
 
 const SignIn: Component = () => {
 	const [t] = useI18n();
-	const [, { login }] = useAuth();
+	const [, { login, googleLogin }] = useAuth();
 
 	const [state, setState] = createStore({
 		email: "marko.gartnar777@gmail.com",
@@ -48,7 +48,9 @@ const SignIn: Component = () => {
 		);
 	};
 
-	const handleGoogleSignup = () => {};
+	const handleGoogleSignup = () => {
+		googleLogin();
+	};
 
 	return (
 		<div className="flex justify-center w-full h-full items-center">

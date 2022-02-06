@@ -14,6 +14,10 @@ const login = async (userData: { email: string; password: string }) => {
 	return await client("user/login", { body: userData });
 };
 
+const googleLogin = async (id_token: string) => {
+	return await client("user/google-login", { body: { id_token } });
+};
+
 const getUser = async (): Promise<any> => {
 	return await client("user/");
 	// return await new Promise((resolve) =>
@@ -21,4 +25,4 @@ const getUser = async (): Promise<any> => {
 	// );
 };
 
-export { register, login, getUser };
+export { register, login, googleLogin, getUser };

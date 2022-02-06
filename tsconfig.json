@@ -15,7 +15,9 @@
     "types": [
       "vite/client",
       "node",
-      "jest"
+      "jest",
+      "gapi",
+      "gapi.auth2"
     ]
   },
   "include": [
