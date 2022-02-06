@@ -1,14 +1,19 @@
 import { useI18n } from "@amoutonbrady/solid-i18n";
 import { NavLink } from "solid-app-router";
-import { Component, createMemo, For } from "solid-js";
+import { Component, createMemo, createSignal, For } from "solid-js";
 import { ROLE_SIDEMENU } from "../../constants/sidemenu";
 import { useAuth } from "../../context/AuthProvider";
+import createMediaQuery from "../../hooks/createMediaQuery";
 import { Avatar } from "../common/Avatar";
 import { Icon } from "../common/Icon";
+import "./Sidemenu.css";
 
 export const Sidemenu: Component = () => {
 	const [auth, { logout }] = useAuth();
 	// const [width, setWidth] = createSignal(250); // TODO: make menu resizable
+	const [isCollapsed, setIsCollapsed] = createSignal(false);
+	const isSmall = createMediaQuery("(max-width: 1200px)");
+	const isMobile = createMediaQuery("(max-width: 700px)");
 	const [t, { locale }] = useI18n();
 
 	const sidemenu = createMemo(() => {
@@ -17,7 +22,13 @@ export const Sidemenu: Component = () => {
 	});
 
 	return (
-		<menu className="bg-primary w-64 h-full text-white relative">
+		<menu
+			className="sidemenu"
+			classList={{
+				"sidemenu-collapsed": isSmall() || isCollapsed(),
+				"sidemenu-mobile": isMobile(),
+			}}
+		>
 			<div className="mx-5 mb-7 mt-3">
 				<div className="flex justify-end">
 					<Icon
@@ -37,16 +48,16 @@ export const Sidemenu: Component = () => {
 						<div className="text-xl leading-none">
 							{auth.user?.display_name}
 						</div>
-						<div className="truncate leading-tight text-sm">
+						<div className="truncate leading-tight text-sm capitalize">
+							{auth.user?.user_type.user_type}
 							{/* {auth.user?.email} */}
-							Administrator
 						</div>
 						<Icon name="more_horiz" />
 					</div>
 				</div>
 			</div>
 
-			<div className="grid">
+			<div className="flex flex-col flex-1">
 				<For each={sidemenu()}>
 					{(item) => (
 						<NavLink
@@ -62,6 +73,15 @@ export const Sidemenu: Component = () => {
 			</div>
 
 			{/* <div className="absolute top-0 bottom-0 -right-1 w-1 hover:bg-indigo-900 cursor-col-resize"></div> */}
+
+			<div className="mt-auto flex">
+				<Icon
+					name="arrow_back_ios"
+					className="ml-auto p-3 mr-2 text-sm cursor-pointer hover:bg-blue-700 rounded-full transition-transform"
+					classList={{ "rotate-180": isCollapsed() }}
+					onClick={() => setIsCollapsed((p) => !p)}
+				/>
+			</div>
 		</menu>
 	);
 };

@@ -22,6 +22,16 @@
 			href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
 			rel="stylesheet"
 		/>
+		<!-- google -->
+		<meta
+			name="google-signin-client_id"
+			content="434877915087-lcq904ubqfpbj4lir6764mi2odhm4895.apps.googleusercontent.com"
+		/>
+		<script
+			src="https://apis.google.com/js/platform.js?onload=onLoad"
+			async
+			defer
+		></script>
 
 		<title>Matura</title>
 	</head>
@@ -30,5 +40,12 @@
 		<div id="root"></div>
 
 		<script src="/src/index.tsx" type="module"></script>
+		<script>
+			function onLoad() {
+				gapi.load("auth2", () => {
+					gapi.auth2.init();
+				});
+			}
+		</script>
 	</body>
 </html>
