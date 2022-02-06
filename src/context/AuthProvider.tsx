@@ -4,7 +4,6 @@ import {
 	createContext,
 	Match,
 	onMount,
-	Show,
 	Switch,
 	useContext,
 } from "solid-js";
@@ -62,7 +61,11 @@ const AuthProvider: Component = (props) => {
 		}
 	}
 
-	function logout() {
+	async function logout() {
+		try {
+			const GoogleAuth = gapi.auth2.getAuthInstance();
+			await GoogleAuth.signOut();
+		} catch (err) {}
 		setAuth("user", null);
 		localStorage.removeItem(ACCESS_TOKEN_KEY);
 		navigate((location.state as string) ?? "/");

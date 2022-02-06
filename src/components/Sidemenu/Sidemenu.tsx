@@ -3,13 +3,17 @@ import { NavLink } from "solid-app-router";
 import { Component, createMemo, createSignal, For } from "solid-js";
 import { ROLE_SIDEMENU } from "../../constants/sidemenu";
 import { useAuth } from "../../context/AuthProvider";
+import createMediaQuery from "../../hooks/createMediaQuery";
 import { Avatar } from "../common/Avatar";
 import { Icon } from "../common/Icon";
+import "./Sidemenu.css";
 
 export const Sidemenu: Component = () => {
 	const [auth, { logout }] = useAuth();
 	// const [width, setWidth] = createSignal(250); // TODO: make menu resizable
 	const [isCollapsed, setIsCollapsed] = createSignal(false);
+	const isSmall = createMediaQuery("(max-width: 1200px)");
+	const isMobile = createMediaQuery("(max-width: 700px)");
 	const [t, { locale }] = useI18n();
 
 	const sidemenu = createMemo(() => {
@@ -19,9 +23,10 @@ export const Sidemenu: Component = () => {
 
 	return (
 		<menu
-			className="bg-primary w-64 h-full text-white relative flex flex-col transition-all"
+			className="sidemenu"
 			classList={{
-				"w-16": isCollapsed(),
+				"sidemenu-collapsed": isSmall() || isCollapsed(),
+				"sidemenu-mobile": isMobile(),
 			}}
 		>
 			<div className="mx-5 mb-7 mt-3">
@@ -43,9 +48,9 @@ export const Sidemenu: Component = () => {
 						<div className="text-xl leading-none">
 							{auth.user?.display_name}
 						</div>
-						<div className="truncate leading-tight text-sm">
+						<div className="truncate leading-tight text-sm capitalize">
+							{auth.user?.user_type.user_type}
 							{/* {auth.user?.email} */}
-							Administrator
 						</div>
 						<Icon name="more_horiz" />
 					</div>

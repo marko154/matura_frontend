@@ -19,6 +19,12 @@ body,
 	display: flex;
 }
 
+@media screen and (max-width: 700px) {
+	#root {
+		flex-direction: column;
+	}
+}
+
 .mapboxgl-ctrl-logo,
 .mapboxgl-ctrl-attrib-inner {
 	display: none !important;

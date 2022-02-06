@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.sidemenu {
+	@apply bg-primary w-64 h-full text-white relative flex flex-col transition-all;
+}
+
+.sidemenu-collapsed {
+	@apply w-16;
+}
+
+.sidemenu-mobile {
+	@apply w-full h-16;
+}

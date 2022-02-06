@@ -16,6 +16,9 @@ declare global {
 		avatar_url?: string;
 		email_validated: boolean;
 		locale: string;
+		user_type: {
+			user_type: string;
+		};
 	}
 	interface Mentor {
 		mentor_id?: number;
