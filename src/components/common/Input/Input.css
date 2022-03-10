@@ -3,9 +3,63 @@
 @tailwind utilities;
 
 @layer components {
-	.input {
-		@apply border border-primary bg-light-blue text-dark-blue w-full focus:ring outline-none;
-		padding: 9px 12px;
-		border-radius: 5px;
-	}
+  .input {
+    @apply border border-primary bg-light-blue text-gray-700 w-full focus:ring outline-none;
+    padding: 9px 12px;
+    border-radius: 5px;
+  }
+}
+
+.input:disabled {
+  @apply text-gray-500 cursor-not-allowed;
+}
+
+.error .input:-webkit-autofill,
+.error .input:-webkit-autofill:hover,
+.error .input:-webkit-autofill:focus,
+.error .input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgb(254 242 242) inset !important;
+}
+
+.error .input {
+  @apply border-red-600 bg-red-50 ring-red-300;
+}
+
+.error label {
+  @apply text-red-600;
+}
+
+.error .material-icons-round {
+  @apply !text-red-400;
+}
+
+.warning .material-icons-round {
+  @apply !text-orange-500;
+}
+
+.secondary .input {
+  @apply bg-gray-100 border-gray-300 ring-blue-100 focus:border-gray-300;
+}
+
+.secondary label {
+  @apply text-gray-600;
+}
+
+.secondary.warning .input {
+  @apply border-orange-200 bg-amber-50 ring-orange-200;
+}
+.secondary.warning label {
+  @apply text-orange-700;
+}
+
+.secondary.error .input {
+  @apply border-red-300 bg-red-50 ring-red-200;
+}
+
+.secondary.error label {
+  @apply text-red-600;
+}
+
+.secondary .material-icons-round {
+  @apply text-gray-500;
 }

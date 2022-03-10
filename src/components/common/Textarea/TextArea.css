@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.textarea textarea {
+  @apply border w-full rounded-md h-24 focus:ring outline-none px-3 py-2 text-gray-700;
+}
+
+.textarea.primary textarea {
+  @apply border border-primary;
+}
+
+.textarea.primary label {
+  @apply text-primary;
+}
+
+.textarea.secondary textarea {
+  @apply border border-gray-300 bg-gray-100 ring-blue-100;
+}
+
+.textarea.secondary label {
+  @apply text-gray-600;
+}

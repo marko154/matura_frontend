@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.modal.background {
+  @apply absolute inset-0 bg-black opacity-0 pointer-events-none z-10 transition-opacity;
+}
+
+.modal-container {
+  @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 
+  -translate-y-1/2 bg-white rounded-lg shadow-lg scale-95
+  transition-all opacity-0 pointer-events-none;
+}
+
+.open.modal-container {
+  @apply scale-100 opacity-100 pointer-events-auto;
+}
+
+.background.open {
+  @apply !opacity-40 pointer-events-auto;
+}

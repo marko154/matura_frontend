@@ -5,24 +5,26 @@ import { privateOnlyRoutes, publicOnlyRoutes, neutralRoutes } from "./routes";
 import { dict } from "./translations";
 import { AuthProvider, useAuth } from "./context/AuthProvider";
 import { Sidemenu } from "./components/Sidemenu/Sidemenu";
+import { ToastContainer } from "./components/common/Toast/Toast";
 
 const App: Component = () => {
-	const Routes = useRoutes([
-		...privateOnlyRoutes,
-		...publicOnlyRoutes,
-		...neutralRoutes,
-	]);
+  const Routes = useRoutes([
+    ...privateOnlyRoutes,
+    ...publicOnlyRoutes,
+    ...neutralRoutes,
+  ]);
 
-	return (
-		<I18nProvider dict={dict} locale={"en"}>
-			<Router>
-				<AuthProvider>
-					{useAuth()[0].user && <Sidemenu />}
-					<Routes />
-				</AuthProvider>
-			</Router>
-		</I18nProvider>
-	);
+  return (
+    <I18nProvider dict={dict} locale={"en"}>
+      <Router>
+        <AuthProvider>
+          {useAuth()[0].user && <Sidemenu />}
+          <Routes />
+        </AuthProvider>
+      </Router>
+      <ToastContainer />
+    </I18nProvider>
+  );
 };
 
 export default App;

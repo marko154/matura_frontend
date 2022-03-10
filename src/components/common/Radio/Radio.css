@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.radio {
+  @apply flex items-center cursor-pointer;
+}
+
+.radio .outer {
+  @apply relative inline-flex justify-center transition-all
+    items-center p-2 rounded-full hover:bg-blue-50 mr-1;
+}
+
+.radio input {
+  z-index: 1;
+}
+
+.radio input:checked + span .inner {
+  @apply bg-primary;
+
+  animation: appear 0.25s ease;
+}
+@keyframes appear {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}

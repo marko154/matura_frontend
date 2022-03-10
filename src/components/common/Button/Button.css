@@ -3,20 +3,25 @@
 @tailwind utilities;
 
 @layer components {
-	.button {
-		@apply bg-primary text-white hover:bg-blue-700 transition-colors outline-none 
+  .button {
+    @apply bg-primary text-white hover:bg-blue-700 transition-colors outline-none 
 		disabled:bg-opacity-70 disabled:hover:bg-primary block
 		focus:ring;
-		padding: 9px 12px;
-		border-radius: 5px;
-	}
+    padding: 9px 14px;
+    border-radius: 5px;
+  }
 
-	.google {
-		@apply bg-white text-primary hover:bg-light-blue transition-colors outline-none focus:ring border border-primary;
-	}
+  .google {
+    @apply bg-white text-primary hover:bg-light-blue transition-colors outline-none focus:ring border border-primary;
+  }
 }
 
-.loading {
-	position: relative;
-	color: transparent;
+.button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.button.secondary {
+  @apply bg-gray-100 ring-blue-100 border
+	text-gray-700 hover:bg-gray-200 border-gray-300 disabled:text-gray-400;
 }

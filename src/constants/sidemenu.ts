@@ -1,57 +1,61 @@
 interface SidemenuItem {
-	text: string;
-	path: string;
-	end?: boolean;
+  text: string;
+  path: string;
+  end?: boolean;
 }
 
 export const adminSidemenu: SidemenuItem[] = [
-	{
-		text: "sidebar.home",
-		path: "/",
-		end: true,
-	},
-	{
-		text: "sidebar.patients",
-		path: "/patients",
-	},
-	{
-		text: "sidebar.caregivers",
-		path: "/caregivers",
-	},
-	{
-		text: "sidebar.mentors",
-		path: "/mentors",
-	},
+  {
+    text: "sidebar.home",
+    path: "/",
+    end: true,
+  },
+  {
+    text: "sidebar.patients",
+    path: "/patients",
+  },
+  {
+    text: "sidebar.caregivers",
+    path: "/caregivers",
+  },
+  {
+    text: "sidebar.mentors",
+    path: "/mentors",
+  },
+  {
+    text: "sidebar.sessions",
+    path: "/sessions",
+  },
 ];
 
 export const mentorSidemenu: SidemenuItem[] = [
-	{
-		text: "sidebar.home",
-		path: "/",
-	},
-	{
-		text: "sidebar.caregivers",
-		path: "/caregivers",
-	},
-	{
-		text: "sidebar.patients",
-		path: "/patients",
-	},
+  {
+    text: "sidebar.home",
+    path: "/",
+  },
+  {
+    text: "sidebar.caregivers",
+    path: "/caregivers",
+  },
+  {
+    text: "sidebar.patients",
+    path: "/patients",
+  },
 ];
 
 export const caregiverSidemenu: SidemenuItem[] = [
-	{
-		text: "sidebar.home",
-		path: "/",
-	},
-	{
-		text: "sidebar.patients",
-		path: "/patients",
-	},
+  {
+    text: "sidebar.home",
+    path: "/",
+  },
+  {
+    text: "sidebar.patients",
+    path: "/patients",
+  },
 ];
 
 export const ROLE_SIDEMENU: { [role: number]: SidemenuItem[] } = {
-	1: adminSidemenu,
-	2: mentorSidemenu,
-	3: caregiverSidemenu,
+  1: adminSidemenu,
+  2: mentorSidemenu,
+  3: caregiverSidemenu,
 };

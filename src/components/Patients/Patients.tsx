@@ -1,92 +1,79 @@
 import { useI18n } from "@amoutonbrady/solid-i18n";
 import { useNavigate } from "solid-app-router";
-import { Component, createResource, createSignal, For, Show } from "solid-js";
-import { getPatients, Response } from "../../http/patient";
+import {
+  Component,
+  createEffect,
+  createResource,
+  createSignal,
+  For,
+  Show,
+} from "solid-js";
+import { createStore } from "solid-js/store";
+import { getPatients, Response, QueryParams } from "../../http/patients";
 import { formatDate } from "../../utils/strings.utils";
 import { Button } from "../common/Button/Button";
+import { Input } from "../common/Input/Input";
 import { Loader } from "../common/Loader/Loader";
 import { MainWrapper } from "../common/MainWrapper";
-import { Modal } from "../common/Modal";
+import { Modal } from "../common/Modal/Modal";
 import { Pagination } from "../common/Pagination";
 import { Table } from "../common/Table/Table";
+import createDebounce from "@solid-primitives/debounce";
+import { InlineSelect } from "../common/InlineSelect";
+import { Icon } from "../common/Icon";
+import { PatientsTable } from "./PatientsTable";
+import { PatientsMap } from "./PatientsMap";
 
 const Patients: Component = () => {
-	const [t] = useI18n();
-	const [page, setPage] = createSignal(1);
-	const [data, { refetch }] = createResource<Response, number>(
-		page,
-		getPatients
-	);
-	const navigate = useNavigate();
+  const [t] = useI18n();
+  const [viewType, setViewType] = createSignal("table");
+  const [params, setParams] = createStore({ page: 1, search: "", limit: 10 });
+  const [data, { refetch }] = createResource<Response, QueryParams>(
+    () => ({ ...params }),
+    getPatients
+  );
+  const navigate = useNavigate();
 
-	const redirectCreate = () => {
-		navigate("/patient/create");
-	};
+  const redirectCreate = () => {
+    navigate("/patient/create");
+  };
 
-	const redirect = (patientId: number) => {
-		navigate(`/patient/${patientId}`);
-	};
+  const [setSearch, clear] = createDebounce(
+    (search) => setParams("search", search as string),
+    500
+  );
 
-	return (
-		<MainWrapper title={t("sidebar.patients")}>
-			<Button className="ml-auto block" onClick={redirectCreate}>
-				{t("patient.createPatient")}
-			</Button>
+  createEffect(() => {
+    console.log(data());
+    console.log(viewType());
+  });
 
-			<Show when={data()} fallback={<Loader />}>
-				<Table className="mt-3">
-					<Table.Header>
-						<Table.Row>
-							<Table.Th>ID</Table.Th>
-							<Table.Th>{t("email")}</Table.Th>
-							<Table.Th>{t("firstName")}</Table.Th>
-							<Table.Th>{t("lastName")}</Table.Th>
-							<Table.Th>{t("gender")}</Table.Th>
-							<Table.Th>{t("phoneNumber")}</Table.Th>
-							<Table.Th>{t("dateOfBirth")}</Table.Th>
-							<Table.Th>Created at</Table.Th>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						<For each={data()!.patients}>
-							{(patient) => (
-								<Table.Row
-									class="cursor-pointer"
-									onClick={() =>
-										redirect(patient.patient_id!)
-									}
-								>
-									<Table.Td>{patient.patient_id}</Table.Td>
-									<Table.Td>{patient.email}</Table.Td>
-									<Table.Td>{patient.first_name}</Table.Td>
-									<Table.Td>{patient.last_name}</Table.Td>
-									<Table.Td>{patient.gender}</Table.Td>
-									<Table.Td>
-										<a href={`tel:${patient.phone_number}`}>
-											{patient.phone_number}
-										</a>
-									</Table.Td>
-									<Table.Td>
-										{formatDate(patient.date_of_birth)}
-									</Table.Td>
-									<Table.Td>
-										{formatDate(patient.date_created!)}
-									</Table.Td>
-								</Table.Row>
-							)}
-						</For>
-					</Table.Body>
-				</Table>
+  return (
+    <MainWrapper title={t("sidebar.patients")}>
+      <div className="flex gap-2">
+        <Input
+          className="w-80"
+          version="secondary"
+          placeholder={t("searchBy")}
+          onInput={(e) => setSearch(e.currentTarget.value)}
+          icon="search"
+          autofocus
+        />
+        <InlineSelect
+          onSelect={(type) => setViewType(type)}
+          options={[
+            { value: "table", content: <Icon name="list" /> },
+            { value: "map", content: <Icon name="map" /> },
+          ]}
+        />
+        <Button className="ml-auto" onClick={redirectCreate}>
+          {t("patient.createPatient")}
+        </Button>
+      </div>
 
-				<Pagination
-					totalPages={Math.ceil(data()!.total / 10)}
-					activePage={page()}
-					onPageChange={setPage}
-					className="mx-auto py-10"
-				/>
-			</Show>
-		</MainWrapper>
-	);
+      {viewType() === "table" ? <PatientsTable data={data} /> : <PatientsMap />}
+    </MainWrapper>
+  );
 };
 
 export default Patients;

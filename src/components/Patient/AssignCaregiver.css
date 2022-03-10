@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.marker {
+  background-color: #059669;
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.mapboxgl-popup {
+  max-width: 200px;
+}
+.mapboxgl-popup-content {
+  @apply text-center rounded-lg shadow-lg;
+  animation: appear 0.2s ease;
+  transform-origin: bottom;
+}
+
+@keyframes appear {
+  from {
+    transform: scale(0.5);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.patient-marker {
+  background-color: #1d4ed8;
+}

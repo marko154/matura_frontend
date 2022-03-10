@@ -17,7 +17,9 @@
       "node",
       "jest",
       "gapi",
-      "gapi.auth2"
+      "gapi.auth2",
+      "solid-js",
+      "solid-js/web",
     ]
   },
   "include": [
