@@ -1,5 +1,5 @@
 import { useI18n } from "@amoutonbrady/solid-i18n";
-import { Component } from "solid-js";
+import { Component, createSignal, JSX } from "solid-js";
 import { createStore } from "solid-js/store";
 import { MainWrapper } from "../common/MainWrapper";
 import createDebounce from "@solid-primitives/debounce";
@@ -14,7 +14,7 @@ const CreatePatient: Component = () => {
   const [t] = useI18n();
   const navigate = useNavigate();
   const [fn, cancel] = createDebounce(() => {}, 300);
-
+  const [loading, setLoading] = createSignal(false);
   const [patient, setPatient] = createStore<Patient>({
     first_name: "",
     last_name: "",
@@ -23,11 +23,12 @@ const CreatePatient: Component = () => {
     date_of_birth: "",
     gender: "MALE",
     phone_number: "",
-    location: undefined,
+    location: null,
   });
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit: JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await createPatient(patient as Patient);
       toast({ text: "Patient successfully created" });
@@ -35,10 +36,11 @@ const CreatePatient: Component = () => {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const handleChange = (e: any) => {
-    setPatient(e.target.name, e.target.value);
+    setPatient(e.currentTarget.name, e.currentTarget.value);
   };
 
   const canSubmit = () => {
@@ -100,8 +102,9 @@ const CreatePatient: Component = () => {
           />
           <Button
             onClick={handleSubmit}
-            disabled={!canSubmit()}
-            className="block ml-auto mt-5"
+            disabled={!canSubmit() || loading()}
+            loading={loading()}
+            className="mt-5"
           >
             {t("create")}
           </Button>

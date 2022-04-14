@@ -49,3 +49,9 @@ export const assignCaregiver = (session: Session) => {
 export const addContacts = async (patient_id: string | number, contacts: any[]) => {
   return client(`patient/${patient_id}/add-contacts`, { body: contacts });
 };
+
+export const getLocations = async (): Promise<
+  { patient_id: number; long: number; lat: number }[]
+> => {
+  return await client("patient/locations");
+};

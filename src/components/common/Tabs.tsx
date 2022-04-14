@@ -1,7 +1,8 @@
-import { Component, createEffect, createMemo, createSignal, For, JSX } from "solid-js";
+import { Component, createSignal, For, JSX } from "solid-js";
+import { Dynamic } from "solid-js/web";
 
 type TabsProps = JSX.IntrinsicElements["div"] & {
-  panes: { title: string | JSX.Element; element: Component }[];
+  panes: { title: string | JSX.Element; route?: string; element: Component }[];
   activePane?: number;
   defaultIndex?: number;
 };
@@ -37,7 +38,9 @@ export const Tabs: Component<TabsProps> = ({ panes, defaultIndex }) => {
           )}
         </For>
       </nav>
-      <section>{panes[activeTab()].element({})}</section>
+      <section>
+        <Dynamic component={panes[activeTab()].element} />
+      </section>
     </div>
   );
 };

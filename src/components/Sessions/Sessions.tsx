@@ -14,7 +14,7 @@ import { formatDate } from "../../utils/strings.utils";
 
 const Sessions: Component = () => {
   const [t] = useI18n();
-  const [params, setParams] = createStore({ page: 1, search: "" });
+  const [params, setParams] = createStore({ page: 1, search: "", from: "", to: "" });
   const [data, { refetch }] = createResource<any, any>(
     () => ({ ...params }),
     getAllSessions
@@ -37,8 +37,18 @@ const Sessions: Component = () => {
           icon="search"
           autofocus
         />
-        <Input type="date" version="secondary" className="w-60" />
-        <Input type="date" version="secondary" className="w-60" />
+        <Input
+          type="date"
+          version="secondary"
+          className="w-60"
+          onInput={(e) => setParams("from", e.currentTarget.value)}
+        />
+        <Input
+          type="date"
+          version="secondary"
+          className="w-60"
+          onInput={(e) => setParams("to", e.currentTarget.value)}
+        />
       </div>
 
       {data.loading || !data() ? (

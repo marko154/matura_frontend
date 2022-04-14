@@ -13,3 +13,8 @@ export const toDateInputValue = (date: Date | string) => {
   const local = new Date(date);
   return local.toJSON().slice(0, 10);
 };
+
+export const toTimeInputValue = (date: Date | string) => {
+  const local = new Date(date);
+  return local.toJSON().slice(11, 19);
+};

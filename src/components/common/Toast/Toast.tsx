@@ -1,4 +1,4 @@
-import { Component, For, Index } from "solid-js";
+import { Component, createSignal, For, Index } from "solid-js";
 import { createStore } from "solid-js/store";
 import { TransitionGroup } from "solid-transition-group";
 import { generateUniqueID } from "../../../utils/uniqueID.utils";
@@ -9,38 +9,35 @@ type Message = {
   id: string;
 };
 
-let toast: (message: Omit<Message, "id">) => void;
+let parent!: HTMLElement;
+const [state, setState] = createStore<{ messages: Message[] }>({
+  messages: [],
+});
 
-export const ToastContainer: Component = () => {
-  let parent!: HTMLElement;
-  const [state, setState] = createStore<{ messages: Message[] }>({
-    messages: [],
-  });
+let toast = function (newMessage: { text: string }) {
+  const id = generateUniqueID();
+  const first = parent.offsetHeight;
 
-  toast = function (newMessage: { text: string }) {
-    const id = generateUniqueID();
-    const first = parent.offsetHeight;
+  setState("messages", [...state.messages, { text: newMessage.text, id }]);
 
-    setState("messages", [...state.messages, { text: newMessage.text, id }]);
+  const last = parent.offsetHeight;
+  const invert = last - first;
+  const animation = parent.animate(
+    [{ transform: `translateY(${invert}px)` }, { transform: "translateY(0)" }],
+    {
+      duration: 150,
+      easing: "ease-out",
+    }
+  );
 
-    const last = parent.offsetHeight;
-    const invert = last - first;
-    const animation = parent.animate(
-      [{ transform: `translateY(${invert}px)` }, { transform: "translateY(0)" }],
-      {
-        duration: 150,
-        easing: "ease-out",
-      }
+  setTimeout(() => {
+    setState(
+      "messages",
+      state.messages.filter((message) => message.id !== id)
     );
-
-    setTimeout(() => {
-      setState(
-        "messages",
-        state.messages.filter((message) => message.id !== id)
-      );
-    }, 5000);
-  };
-
+  }, 5000);
+};
+export const ToastContainer: Component = () => {
   return (
     <section className="toast-container" ref={parent}>
       <TransitionGroup name="toast-message">

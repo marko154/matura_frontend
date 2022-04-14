@@ -40,6 +40,7 @@ type CaregiverWithLocation = Caregiver & {
   place_name: string;
   distance: number;
 };
+
 type MapProps = JSX.IntrinsicElements["div"] & {
   caregivers: CaregiverWithLocation[];
   patient: Patient & { location: Location };
@@ -118,7 +119,7 @@ const Map: Component<MapProps> = ({
 type Props = {
   patient: Patient & { location: Location };
 };
-
+// TODO: scroll to selected user onchange on map select
 export const AssignCaregiver: Component<Props> = ({ patient }) => {
   const [caregivers, {}] = createResource<CaregiverWithLocation[], string>(
     patient.location_id,
@@ -181,7 +182,9 @@ export const AssignCaregiver: Component<Props> = ({ patient }) => {
                     <div class="ml-4 items-center">
                       <div class="text-lg">{`${caregiver.first_name} ${caregiver.last_name}`}</div>
                       <div class="text-gray-600 text-sm">{caregiver.place_name}</div>
-                      <div class="text-gray-600">{caregiver.distance * 111}</div>
+                      <div class="text-gray-600">
+                        {(caregiver.distance * 111).toFixed(2) + " km"}
+                      </div>
                       {isSelected() && (
                         <div class="mt-4 mb-3">
                           <TextArea

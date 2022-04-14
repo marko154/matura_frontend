@@ -11,6 +11,7 @@ export default {
   resetPassword: "Reset Password",
   forgotPassword: "Forgot your password?",
   instructionsSent: "Instructions for resetting your password were sent to {{ email }}.",
+  welcome: "Welcome {{ user }}!",
   firstName: "First Name",
   lastName: "Last Name",
   phoneNumber: "Phone Number",

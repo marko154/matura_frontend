@@ -14,7 +14,7 @@ import { toast } from "../common/Toast/Toast";
 const CreateMentor: Component = () => {
   const [t] = useI18n();
   const navigate = useNavigate();
-
+  const [loading, setLoading] = createSignal(false);
   const [mentor, setMentor] = createStore<Mentor & { email: string }>({
     email: "",
     first_name: "",
@@ -48,12 +48,15 @@ const CreateMentor: Component = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const { user } = await createMentor(mentor);
       toast({ text: "Mentor successfully created" });
       navigate(`/mentor/${user.mentor.mentor_id}`, { replace: true });
     } catch (err) {
+      toast({ text: "Something went wrong" });
       console.log(err);
     }
+    setLoading(false);
   };
 
   const handleChange = (e: any) => {
@@ -85,6 +88,7 @@ const CreateMentor: Component = () => {
             icon={emailIcon()}
             error={emailAvailable.available === false}
             loading={emailAvailable.loading}
+            autofocus
           />
           <Input
             version="secondary"
@@ -98,7 +102,13 @@ const CreateMentor: Component = () => {
             onInput={handleChange}
             name="last_name"
           />
-          <Input version="secondary" label="EMŠO" onInput={handleChange} name="emso" />
+          <Input
+            version="secondary"
+            label="EMŠO"
+            onInput={handleChange}
+            name="emso"
+            maxlength={13}
+          />
           <Input
             version="secondary"
             label={t("phoneNumber")}
@@ -117,6 +127,7 @@ const CreateMentor: Component = () => {
           <Button
             onClick={handleSubmit}
             disabled={!canSubmit()}
+            loading={loading()}
             className="block ml-auto mt-5"
           >
             {t("create")}

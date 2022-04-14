@@ -1,6 +1,6 @@
 import { useI18n } from "@amoutonbrady/solid-i18n";
 import { useNavigate } from "solid-app-router";
-import { Component, createEffect, createSignal, For, JSX } from "solid-js";
+import { Component, createSignal, For, JSX } from "solid-js";
 import { createStore } from "solid-js/store";
 import { createCaregiver } from "../../http/caregivers";
 import { getDay, toDateInputValue } from "../../utils/date.utils";
@@ -9,6 +9,7 @@ import { Button } from "../common/Button/Button";
 import { Checkbox } from "../common/Checkbox";
 import { Input } from "../common/Input/Input";
 import { Radio } from "../common/Radio/Radio";
+import { Select } from "../common/Select/Select";
 import { toast } from "../common/Toast/Toast";
 
 export type AvailibilityFields = {
@@ -26,7 +27,6 @@ const AddAvailibility: Component<{ add: (av: AvailibilityFields) => void }> = ({
   add,
 }) => {
   const [t] = useI18n();
-
   const [state, setState] = createStore<AvailibilityFields>({
     start_date: toDateInputValue(new Date()),
     end_date: null,
@@ -76,13 +76,14 @@ const AddAvailibility: Component<{ add: (av: AvailibilityFields) => void }> = ({
       <div class="grid max-w-lg" style="grid-template-columns: 10rem 1fr; gap: 1rem;">
         <div class="text-right px-3 py-2">Repeats: </div>
         <div class="flex items-center">
-          <select
-            class="px-3 py-2 rounded w-full bg-gray-100 border border-gray-300"
-            onInput={(e) => setState("repeats", Number(e.currentTarget.value))}
-          >
-            <option value="7">Weekly</option>
-            <option value="30">Monthly</option>
-          </select>
+          <Select
+            options={[
+              { text: "Weekly", val: 7 },
+              { text: "Monthly", val: 30 },
+            ]}
+            defaultValue="Weekly"
+            onChange={() => {}}
+          />
         </div>
         <div class="text-right px-3 py-2">Repeats on: </div>
         <div class="flex gap-4">
@@ -246,9 +247,11 @@ export const SelectAvailibility: Component<SelectAvailibilityProps> = ({
 }) => {
   const [t] = useI18n();
   const navigate = useNavigate();
+  const [loading, setLoading] = createSignal(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     try {
       console.log(caregiver);
       const res = await createCaregiver(caregiver);
@@ -257,7 +260,9 @@ export const SelectAvailibility: Component<SelectAvailibilityProps> = ({
       navigate(`/caregiver/${res.caregiver_id}`, { replace: true });
     } catch (err) {
       console.log(err);
+      toast({ text: "Something went wrong" });
     }
+    setLoading(false);
   };
 
   return (
@@ -266,7 +271,9 @@ export const SelectAvailibility: Component<SelectAvailibilityProps> = ({
         <Button onClick={() => setStep(3)} action="secondary">
           {t("back")}
         </Button>
-        <Button onClick={handleSubmit}>{t("create")}</Button>
+        <Button onClick={handleSubmit} disabled={loading()} loading={loading()}>
+          {t("create")}
+        </Button>
       </div>
       <div class="flex justify-center mt-8 gap-10">
         <AddAvailibility add={addAvailibility} />

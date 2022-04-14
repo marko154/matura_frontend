@@ -34,16 +34,24 @@ export const AccountInfo: Component<AccountInfoProps> = ({
     last_name: caregiver.last_name,
     date_of_birth: caregiver.date_of_birth,
     phone_number: caregiver.phone_number,
+    location: caregiver.location,
   };
   const [state, setState] = createStore({ ...initialState });
 
   const handleSaveChanges = async () => {
     try {
       const serialiezed = JSON.parse(JSON.stringify(state));
-      await updateCaregiver({ caregiver_id: caregiver.caregiver_id, ...serialiezed });
+      if (state.location.location_id === caregiver.location_id) {
+        delete serialiezed.location;
+      }
+      await updateCaregiver(caregiver.caregiver_id, {
+        caregiver_id: caregiver.caregiver_id,
+        ...serialiezed,
+      });
       refetchCaregiver();
       toast({ text: "Succesfully updated" });
     } catch (err) {
+      console.log(err);
       toast({ text: "Saving failed." });
     }
   };
@@ -61,7 +69,8 @@ export const AccountInfo: Component<AccountInfoProps> = ({
       state.first_name !== caregiver.first_name ||
       state.last_name !== caregiver.last_name ||
       state.date_of_birth !== caregiver.date_of_birth ||
-      state.phone_number !== caregiver.phone_number
+      state.phone_number !== caregiver.phone_number ||
+      state.location.location_id !== caregiver.location_id
     );
   };
 
@@ -141,7 +150,7 @@ export const AccountInfo: Component<AccountInfoProps> = ({
           <div class="text-gray-700">{caregiver.location.place_name}</div>
           <Map
             coordinates={caregiver.location.coordinates}
-            onResult={(res) => console.log(res)}
+            onResult={(res) => setState("location", res)}
           />
         </div>
       </div>

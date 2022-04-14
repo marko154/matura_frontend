@@ -11,7 +11,11 @@
 }
 
 .input:disabled {
-  @apply text-gray-500 cursor-not-allowed;
+  @apply cursor-not-allowed;
+}
+
+.input.secondary:disabled {
+  @apply text-gray-500;
 }
 
 .error .input:-webkit-autofill,

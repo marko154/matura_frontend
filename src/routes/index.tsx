@@ -1,6 +1,7 @@
 import { Component, lazy } from "solid-js";
 import { Public } from "../components/Public";
 import { RequireAuth } from "../components/RequireAuth";
+import { RouteDefinition } from "solid-app-router";
 
 const SignUp = lazy(() => import("../components/SignUp"));
 const SignIn = lazy(() => import("../components/SignIn"));
@@ -19,67 +20,51 @@ const CreatePatient = lazy(() => import("../components/Patients/CreatePatient"))
 const PageNotFound = lazy(() => import("../components/PageNotFound"));
 const ResetPassword = lazy(() => import("../components/ResetPassword"));
 const Sessions = lazy(() => import("../components/Sessions/Sessions"));
+const Support = lazy(() => import("../components/Support"));
 
-interface Route {
-  path: string;
-  name: string;
-  component: Component;
-}
-
-const privateOnlyRoutes: Route[] = [
+const privateOnlyRoutes: RouteDefinition[] = [
   {
     path: "/",
-    name: "Home",
     component: Home,
   },
   {
     path: "/caregivers",
-    name: "Caregivers",
     component: Caregivers,
   },
   {
     path: "/patients",
-    name: "Patients",
     component: Patients,
   },
   {
     path: "/mentors",
-    name: "Mentors",
     component: Mentors,
   },
   {
     path: "/mentor/:id",
-    name: "Mentor",
     component: Mentor,
   },
   {
     path: "/patient/:id",
-    name: "Patient",
     component: Patient,
   },
   {
     path: "/mentor/create",
-    name: "Create Mentor",
     component: CreateMentor,
   },
   {
     path: "/caregiver/:id",
-    name: "Caregiver",
     component: Caregiver,
   },
   {
     path: "/caregiver/create",
-    name: "Create Caregiver",
     component: CreateCaregiver,
   },
   {
     path: "/patient/create",
-    name: "Create Patient",
     component: CreatePatient,
   },
   {
     path: "/sessions",
-    name: "Sessions",
     component: Sessions,
   },
 ].map((route) => ({
@@ -91,20 +76,17 @@ const privateOnlyRoutes: Route[] = [
   ),
 }));
 
-const publicOnlyRoutes: Route[] = [
+const publicOnlyRoutes: RouteDefinition[] = [
   {
     path: "/signup",
-    name: "Sign up",
     component: SignUp,
   },
   {
     path: "/signin",
-    name: "Sign in",
     component: SignIn,
   },
   {
     path: "/reset-password/:token",
-    name: "Reset Password",
     component: ResetPassword,
   },
 ].map((route) => ({
@@ -116,10 +98,10 @@ const publicOnlyRoutes: Route[] = [
   ),
 }));
 
-const neutralRoutes: Route[] = [
+const neutralRoutes: RouteDefinition[] = [
+  { path: "/support", component: Support },
   {
     path: "/*",
-    name: "Page not found",
     component: PageNotFound,
   },
 ];

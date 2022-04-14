@@ -3,6 +3,8 @@ import { client } from "./client";
 export const getAllSessions = async (params: {
   search: string;
   page: number;
+  from?: string;
+  to?: string;
   limit?: number;
 }): Promise<(Session & { caregiver: Caregiver; patient: Patient })[]> => {
   return client("patient/all-sessions", {

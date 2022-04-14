@@ -390,16 +390,19 @@ const Mentor: Component = () => {
           panes={[
             {
               title: t("mentor.accountInfo"),
+              route: "/account",
               element: () => (
                 <AccountInfo mentor={mentor()!} refetchMentor={updateMentor} />
               ),
             },
             {
               title: t("mentor.caregivers"),
+              route: "/caregivers",
               element: () => <MentorCaregivers />,
             },
             {
               title: t("mentor.assignCaregiver"),
+              route: "/assign-caregiver",
               element: () => <AssignCaregiver mentorId={params.id} />,
             },
           ]}

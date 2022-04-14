@@ -1,12 +1,5 @@
 import { useLocation, useNavigate } from "solid-app-router";
-import {
-  Component,
-  createContext,
-  Match,
-  onMount,
-  Switch,
-  useContext,
-} from "solid-js";
+import { Component, createContext, Match, onMount, Switch, useContext } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Loader } from "../components/common/Loader/Loader";
 import { ACCESS_TOKEN_KEY } from "../constants/localStorage";
@@ -53,7 +46,6 @@ const AuthProvider: Component = (props) => {
     const res = await GoogleAuth.signIn();
     const { id_token } = res.getAuthResponse();
     const data = await http.googleLogin(id_token);
-    console.log(data);
     await getUserAndRedirect(data.token);
   }
 
@@ -89,9 +81,7 @@ const AuthProvider: Component = (props) => {
   return (
     <Switch fallback={<Loader />}>
       <Match when={!auth.error && !auth.loading}>
-        <AuthContext.Provider value={store}>
-          {props.children}
-        </AuthContext.Provider>
+        <AuthContext.Provider value={store}>{props.children}</AuthContext.Provider>
       </Match>
 
       <Match when={auth.error}>

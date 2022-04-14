@@ -18,27 +18,30 @@ import { formatDate } from "../../utils/strings.utils";
 import { Modal } from "../common/Modal/Modal";
 import { Pagination } from "../common/Pagination";
 import { Icon } from "../common/Icon";
+import { createStore } from "solid-js/store";
+import { Input } from "../common/Input/Input";
 
-const CaregiversTable: Component = ({}) => {
+const CaregiverRow: Component<{ caregiver: any; refetch: () => void }> = ({
+  caregiver,
+  refetch,
+}) => {
   const navigate = useNavigate();
-  const [t] = useI18n();
-  const [page, setPage] = createSignal(1);
-  const [data, { refetch }] = createResource(page, getCaregivers);
   const [userDeleteId, setUserDeleteId] = createSignal<number | null>(null);
+  const [t] = useI18n();
 
-  const redirectCreate = () => {
-    navigate("/caregiver/create");
-  };
+  const [state, setState] = createStore({
+    editing: false,
+    phone_number: caregiver.phone_number,
+  });
 
   const redirect = (caregiverId: number) => {
+    if (state.editing) return;
     navigate(`/caregiver/${caregiverId}`);
   };
-
-  const handleDeleteClick = (e: any, userId: number) => {
+  const handleDeleteClick = (e: any) => {
     e.stopPropagation();
-    setUserDeleteId(userId);
+    setUserDeleteId(caregiver.user.user_id);
   };
-
   const handleDeleteUser = async () => {
     try {
       await deleteCaregiver(userDeleteId()!.toString());
@@ -48,6 +51,69 @@ const CaregiversTable: Component = ({}) => {
     }
     setUserDeleteId(null);
   };
+
+  const handleEditClick = (e: any) => {
+    e.stopPropagation();
+    setState("editing", !state.editing);
+  };
+
+  const handleChange = (e: any) => {
+    setState(e.currentTarget.name, e.currentTarget.value);
+  };
+
+  return (
+    <>
+      <Table.Row class="cursor-pointer" onClick={() => redirect(caregiver.caregiver_id)}>
+        <Table.Td>{caregiver.user.user_id}</Table.Td>
+        <Table.Td>{caregiver.user.email}</Table.Td>
+        <Table.Td>{caregiver.first_name}</Table.Td>
+        <Table.Td>{caregiver.last_name}</Table.Td>
+        {/* <Table.Td>{caregiver.gender}</Table.Td> */}
+        <Table.Td>
+          {state.editing ? (
+            <Input
+              type="tel"
+              name="phone_number"
+              version="secondary"
+              value={state.phone_number}
+            />
+          ) : (
+            <a href={`tel:${caregiver.phone_number}`}>{caregiver.phone_number}</a>
+          )}
+        </Table.Td>
+        <Table.Td>{formatDate(caregiver.date_of_birth)}</Table.Td>
+        <Table.Td class="flex gap-1">
+          <Button action="secondary" className="p-0 w-10 h-10" onClick={handleEditClick}>
+            <Icon name={state.editing ? "close" : "edit"} size="text-xl" />
+          </Button>
+          <Button className="p-0 w-10 h-10" onClick={(e) => handleDeleteClick(e)}>
+            <Icon name={state.editing ? "done" : "delete_outline"} size="text-xl" />
+          </Button>
+        </Table.Td>
+      </Table.Row>
+      <Modal open={userDeleteId() !== null}>
+        <h2 className="mb-8 text-lg">{t("confirmationNote")}</h2>
+        <div className="flex justify-end gap-2">
+          <Button action="secondary" onClick={() => setUserDeleteId(null)}>
+            {t("cancel")}
+          </Button>
+          <Button onClick={handleDeleteUser}>{t("confirm")}</Button>
+        </div>
+      </Modal>
+    </>
+  );
+};
+
+const CaregiversTable: Component = ({}) => {
+  const navigate = useNavigate();
+  const [t] = useI18n();
+  const [page, setPage] = createSignal(1);
+  const [data, { refetch }] = createResource(page, getCaregivers);
+
+  const redirectCreate = () => {
+    navigate("/caregiver/create");
+  };
+
   createEffect(() => console.log(data()));
   return (
     <>
@@ -71,28 +137,7 @@ const CaregiversTable: Component = ({}) => {
           <Table.Body>
             <For each={data()!.caregivers}>
               {(caregiver: any) => (
-                <Table.Row
-                  class="cursor-pointer"
-                  onClick={() => redirect(caregiver.caregiver_id)}
-                >
-                  <Table.Td>{caregiver.user.user_id}</Table.Td>
-                  <Table.Td>{caregiver.user.email}</Table.Td>
-                  <Table.Td>{caregiver.first_name}</Table.Td>
-                  <Table.Td>{caregiver.last_name}</Table.Td>
-                  {/* <Table.Td>{caregiver.gender}</Table.Td> */}
-                  <Table.Td>
-                    <a href={`tel:${caregiver.phone_number}`}>{caregiver.phone_number}</a>
-                  </Table.Td>
-                  <Table.Td>{formatDate(caregiver.date_of_birth)}</Table.Td>
-                  <Table.Td>
-                    <Button
-                      className="p-0 w-10 h-10"
-                      onClick={(e) => handleDeleteClick(e, caregiver.user.user_id)}
-                    >
-                      <Icon name="delete_outline" size="text-xl" />
-                    </Button>
-                  </Table.Td>
-                </Table.Row>
+                <CaregiverRow caregiver={caregiver} refetch={refetch} />
               )}
             </For>
           </Table.Body>
@@ -104,14 +149,6 @@ const CaregiversTable: Component = ({}) => {
           activePage={page()}
           onPageChange={setPage}
         />
-
-        <Modal open={userDeleteId() !== null}>
-          <h2 className="mb-8 text-lg">{t("confirmationNote")}</h2>
-          <div className="flex justify-end gap-2">
-            <Button onClick={() => setUserDeleteId(null)}>{t("cancel")}</Button>
-            <Button onClick={handleDeleteUser}>{t("confirm")}</Button>
-          </div>
-        </Modal>
       </Show>
     </>
   );

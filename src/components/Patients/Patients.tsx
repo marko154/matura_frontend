@@ -58,6 +58,7 @@ const Patients: Component = () => {
           onInput={(e) => setSearch(e.currentTarget.value)}
           icon="search"
           autofocus
+          disabled={viewType() === "map"}
         />
         <InlineSelect
           onSelect={(type) => setViewType(type)}
@@ -71,7 +72,11 @@ const Patients: Component = () => {
         </Button>
       </div>
 
-      {viewType() === "table" ? <PatientsTable data={data} /> : <PatientsMap />}
+      {viewType() === "table" ? (
+        <PatientsTable data={data} params={params} setParams={setParams} />
+      ) : (
+        <PatientsMap search={params.search} />
+      )}
     </MainWrapper>
   );
 };

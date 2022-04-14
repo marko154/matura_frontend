@@ -54,8 +54,24 @@ export const caregiverSidemenu: SidemenuItem[] = [
   },
 ];
 
+export const limitedUserSidemenu: SidemenuItem[] = [
+  {
+    text: "sidebar.home",
+    path: "/",
+  },
+  {
+    text: "sidebar.caregivers",
+    path: "/caregivers",
+  },
+  {
+    text: "sidebar.patients",
+    path: "/patients",
+  },
+];
+
 export const ROLE_SIDEMENU: { [role: number]: SidemenuItem[] } = {
   1: adminSidemenu,
   2: mentorSidemenu,
   3: caregiverSidemenu,
+  4: limitedUserSidemenu,
 };

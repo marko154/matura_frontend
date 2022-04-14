@@ -61,7 +61,7 @@ declare global {
     patient_id: number;
     first_name: string;
     last_name: string;
-    date_of_birth: Date;
+    date_of_birth: Date | string;
     emso: string;
     email: string | null;
     phone_number: string | null;
@@ -92,6 +92,21 @@ declare global {
     email: string | null;
     phone_number: string | null;
     patient_id: number;
+  };
+
+  type Term = {
+    term_id: number;
+    start_date: Date;
+    end_date: Date | null;
+  };
+
+  type Availibility = {
+    availibilty_id: number;
+    day_of_week: number;
+    start_time: Date;
+    end_time: Date;
+    term_id: number;
+    caregiver_id: number;
   };
 }
 

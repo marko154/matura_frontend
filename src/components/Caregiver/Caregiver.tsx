@@ -43,10 +43,10 @@ const Caregiver: Component = () => {
               title: t("caregiver.sessions"),
               element: () => <CaregiverSessions />,
             },
-            {
-              title: t("caregiver.assignPatient"),
-              element: () => <AssignToPatient />,
-            },
+            // {
+            //   title: t("caregiver.assignPatient"),
+            //   element: () => <AssignToPatient />,
+            // },
             {
               title: t("caregiver.availibility"),
               element: () => <Availibility />,

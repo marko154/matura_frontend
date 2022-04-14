@@ -47,12 +47,12 @@ const SignIn: Component = () => {
   const isValid = () => {
     return (
       state.email.length > 0 &&
-      isValidEmail(state.email) &&
+      // isValidEmail(state.email) &&
       state.password.length > 0
     );
   };
 
-  const handleGoogleSignup = async () => {
+  const handleGoogleSignin = async () => {
     try {
       setState("googleLoading", true);
       await googleLogin();
@@ -117,7 +117,7 @@ const SignIn: Component = () => {
           </Button>
           <Button
             className="w-full mt-2"
-            onClick={handleGoogleSignup}
+            onClick={handleGoogleSignin}
             action="google"
             type="button"
             loading={state.googleLoading}
@@ -126,12 +126,12 @@ const SignIn: Component = () => {
             {t("continueWithGoogle")}
           </Button>
 
-          <div className="text-center text-primary mt-3">
+          {/* <div className="text-center text-primary mt-3">
             {t("dontHaveAcc")}&nbsp;
             <Link href="/signup" className="text-blue-700">
               {t("signup")}
             </Link>
-          </div>
+          </div> */}
         </form>
 
         <Show when={state.error}>

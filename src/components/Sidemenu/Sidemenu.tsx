@@ -3,6 +3,7 @@ import { NavLink } from "solid-app-router";
 import { Component, createMemo, createSignal, For } from "solid-js";
 import { ROLE_SIDEMENU } from "../../constants/sidemenu";
 import { useAuth } from "../../context/AuthProvider";
+import { clickOutside } from "../../hooks/clickOutside";
 import createMediaQuery from "../../hooks/createMediaQuery";
 import { Avatar } from "../common/Avatar";
 import { Icon } from "../common/Icon";
@@ -15,6 +16,7 @@ export const Sidemenu: Component = () => {
   const isSmall = createMediaQuery("(max-width: 1200px)");
   const isMobile = createMediaQuery("(max-width: 700px)");
   const [t, { locale }] = useI18n();
+  const [actionsMenuOpen, setActionsMenuOpen] = createSignal(false);
 
   const sidemenu = createMemo(() => {
     if (!auth.user?.user_type_id) return [];
@@ -31,23 +33,38 @@ export const Sidemenu: Component = () => {
     >
       <div className="mx-5 mb-7 mt-3">
         <div className="flex justify-end">
-          <Icon
-            name="translate"
-            className="cursor-pointer"
-            onClick={() => locale(locale() === "en" ? "sl" : "en")}
-          />
-          <Icon
-            onClick={() => logout()}
-            className="rotate-180 cursor-pointer"
-            name="logout"
-          />
+          <div class="" onClick={() => setActionsMenuOpen(true)}>
+            <Icon name="settings" />
+          </div>
+          {actionsMenuOpen() && (
+            <div
+              class="absolute bg-gray-200 w-40 rounded text-gray-900 shadow-sm z-10 p-2"
+              style="left: calc(100% - 0.5rem);"
+              // use:clickOutside={() => setActionsMenuOpen(false)}
+            >
+              <div>
+                Language
+                <Icon
+                  name="translate"
+                  className="cursor-pointer"
+                  onClick={() => locale(locale() === "en" ? "sl" : "en")}
+                />
+              </div>
+              <div>
+                Log out
+                <Icon
+                  onClick={() => logout()}
+                  className="rotate-180 cursor-pointer"
+                  name="logout"
+                />
+              </div>
+            </div>
+          )}
         </div>
         <div className="flex gap-x-1 truncate -mt-2">
           <Avatar imageURL={auth.user?.avatar_url} className="mr-3" />
           <div className="flex flex-col justify-center">
-            <div className="text-xl leading-none">
-              {auth.user?.display_name}
-            </div>
+            <div className="text-xl leading-none">{auth.user?.display_name}</div>
             <div className="truncate leading-tight text-sm capitalize">
               {auth.user?.user_type.user_type}
               {/* {auth.user?.email} */}

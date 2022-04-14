@@ -5,12 +5,6 @@ const register = async (userData: { email: string; password: string }) => {
 };
 
 const login = async (userData: { email: string; password: string }) => {
-  // return await new Promise((resolve) =>
-  // 	setTimeout(
-  // 		() => resolve({ email: "joe@gmail.com", display_name: "joe" }),
-  // 		1000
-  // 	)
-  // );
   return await client("user/login", { body: userData });
 };
 
@@ -20,9 +14,6 @@ const googleLogin = async (id_token: string) => {
 
 const getUser = async (): Promise<any> => {
   return await client("user/");
-  // return await new Promise((resolve) =>
-  // 	setTimeout(() => resolve(null), 1000)
-  // );
 };
 
 const requestPasswordReset = async (email: string) => {
@@ -43,6 +34,18 @@ const getRecentUsers = async () => {
   return await client("user/recent-users");
 };
 
+const adminCreateUser = async (data: {
+  email: string;
+  user_type_id: number;
+  display_name: string | null;
+}) => {
+  return await client("user/create-user", { body: data });
+};
+
+const verifyToken = async (token: string) => {
+  return await client(`user/verify/${token}`);
+};
+
 export {
   register,
   login,
@@ -52,4 +55,6 @@ export {
   requestPasswordReset,
   checkEmailAvailable,
   getRecentUsers,
+  adminCreateUser,
+  verifyToken,
 };
