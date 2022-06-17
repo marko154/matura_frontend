@@ -17,6 +17,7 @@ export const getAllSessions = async (params: {
 
 export const createSession = async (fields: {
   notes: string;
+  duration: string;
   patient_id: number;
   caregiver_id: number;
 }) => {

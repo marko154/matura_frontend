@@ -1,15 +1,15 @@
 import { client } from "./client";
 
 export const createMentor = async (mentor: Mentor) => {
-  return await client("mentor/create", { body: mentor });
+  return await client("mentors/", { body: mentor });
 };
 
 export type MentorData = Mentor & { user: User };
-export type Response = { mentors: MentorData[]; total: number };
+export type Response = { data: { mentors: MentorData[]; total: number }; status: string };
 export type QueryParams = { page: number; search: string };
 
 export const getMentors = async (params: QueryParams): Promise<Response> => {
-  return await client("mentor/all", {
+  return await client("mentors/", {
     URLParams: {
       limit: 10,
       ...params,
@@ -17,12 +17,16 @@ export const getMentors = async (params: QueryParams): Promise<Response> => {
   });
 };
 
-export const getMentor = async (id: string): Promise<Mentor & { user: User }> => {
-  return await client(`mentor/${id}`);
+export const getMentor = async (
+  id: string
+): Promise<{
+  data: Mentor & { user: User };
+}> => {
+  return await client(`mentors/${id}`);
 };
 
 export const getCaregivers = async (id: string) => {
-  return await client(`mentor/${id}/caregivers`);
+  return await client(`mentors/${id}/caregivers`);
 };
 
 export const getAssignableCaregivers = async (params: {
@@ -32,11 +36,11 @@ export const getAssignableCaregivers = async (params: {
   skip: number;
   take: number;
 }) => {
-  return await client(`mentor/assignable-caregivers`, { URLParams: params });
+  return await client(`mentors/assignable-caregivers`, { URLParams: params });
 };
 
 export const deleteMentor = async (id: string) => {
-  return await client(`mentor/${id}`, { method: "DELETE" });
+  return await client(`mentors/${id}`, { method: "DELETE" });
 };
 
 export const updateMentor = async (fields: {
@@ -46,13 +50,13 @@ export const updateMentor = async (fields: {
   date_of_birth: string;
   phone_number: string;
 }) => {
-  return await client("mentor", { method: "PATCH", body: fields });
+  return await client("mentors", { method: "PATCH", body: fields });
 };
 
 export const assignCaregivers = async (id: string, caregivers: number[]) => {
-  return await client(`mentor/${id}/assign-caregivers`, { body: { caregivers } });
+  return await client(`mentors/${id}/assign-caregivers`, { body: { caregivers } });
 };
 
 export const unassignCaregivers = async (id: string, caregivers: number[]) => {
-  return await client(`mentor/unassign-caregivers`, { body: { caregivers } });
+  return await client(`mentors/unassign-caregivers`, { body: { caregivers } });
 };

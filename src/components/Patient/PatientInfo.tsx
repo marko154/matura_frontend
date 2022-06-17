@@ -13,6 +13,8 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { updatePatient } from "../../http/patients";
 import { toast } from "../common/Toast/Toast";
+import { useAuth } from "../../context/AuthProvider";
+import { isAdmin } from "../../utils/roles.utils";
 
 mapboxgl.accessToken = import.meta.env.SOLID_APP_MAPBOX_API_KEY;
 
@@ -61,6 +63,7 @@ type PatientInfoProps = {
 
 export const PatientInfo: Component<PatientInfoProps> = ({ patient, refetchPatient }) => {
   const [t] = useI18n();
+  const [{ user }] = useAuth();
   const initialState = {
     first_name: patient.first_name,
     last_name: patient.last_name,
@@ -112,12 +115,20 @@ export const PatientInfo: Component<PatientInfoProps> = ({ patient, refetchPatie
     <div class="mb-9">
       <div className="flex justify-end pt-9 pb-2 gap-3">
         <h2 className="mr-auto text-lg text-gray-700 ml-7">{t("mentor.personalInfo")}</h2>
-        <Button action="secondary" disabled={!wereChangesMade()} onClick={handleCancel}>
-          {t("cancel")}
-        </Button>
-        <Button disabled={!wereChangesMade()} onClick={handleSaveChanges}>
-          {t("saveChanges")}
-        </Button>
+        {isAdmin(user!) && (
+          <>
+            <Button
+              action="secondary"
+              disabled={!wereChangesMade()}
+              onClick={handleCancel}
+            >
+              {t("cancel")}
+            </Button>
+            <Button disabled={!wereChangesMade()} onClick={handleSaveChanges}>
+              {t("saveChanges")}
+            </Button>
+          </>
+        )}
       </div>
       <Segment title={t("user.name")}>
         <Input
@@ -125,12 +136,14 @@ export const PatientInfo: Component<PatientInfoProps> = ({ patient, refetchPatie
           name="first_name"
           value={state.first_name}
           onInput={handleChange}
+          disabled={!isAdmin(user!)}
         />
         <Input
           version="secondary"
           name="last_name"
           value={state.last_name}
           onInput={handleChange}
+          disabled={!isAdmin(user!)}
         />
       </Segment>
 
@@ -141,6 +154,7 @@ export const PatientInfo: Component<PatientInfoProps> = ({ patient, refetchPatie
           name="email"
           onInput={handleChange}
           style="min-width: 464px"
+          disabled={!isAdmin(user!)}
         />
       </Segment>
 
@@ -151,10 +165,15 @@ export const PatientInfo: Component<PatientInfoProps> = ({ patient, refetchPatie
           name="phone_number"
           value={state.phone_number || "Not set"}
           onInput={handleChange}
+          disabled={!isAdmin(user!)}
         />
       </Segment>
       <Segment title={t("user.dateOfBirth")}>
-        <Input version="secondary" value={formatDate(patient.date_of_birth)} />
+        <Input
+          version="secondary"
+          value={formatDate(patient.date_of_birth)}
+          disabled={!isAdmin(user!)}
+        />
       </Segment>
 
       <Segment title={"Details"}>

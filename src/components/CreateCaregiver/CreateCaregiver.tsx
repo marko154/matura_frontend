@@ -8,12 +8,29 @@ import { Map } from "../common/Map";
 import { SelectMentor } from "./SelectMentor";
 import { CaregiverPersonalInfo } from "./CaregiverPersonalInfo";
 import { AvailibilityFields, SelectAvailibility } from "./SelectAvailability";
+import { Steps } from "../common/Steps/Steps";
+
+const STEPS = [
+  {
+    text: "Personal Info",
+  },
+  {
+    text: "Location",
+  },
+  {
+    text: "Mentor",
+  },
+  {
+    text: "Availibility",
+  },
+];
 
 const CreateCaregiver: Component = () => {
   const [t] = useI18n();
   const navigate = useNavigate();
 
-  const [step, setStep] = createSignal(4);
+  const [step, setStep] = createSignal(1);
+  const [completedSteps, setCompletedSteps] = createSignal([]);
   const [caregiver, setCaregiver] = createStore({
     email: "",
     first_name: "",
@@ -41,8 +58,23 @@ const CreateCaregiver: Component = () => {
     setCaregiver("availibilities", [...caregiver.availibilities, availibility]);
   };
 
+  const handleStepChange = (step: number) => {};
+
   return (
-    <MainWrapper title={t("caregiver.createCaregiver")}>
+    <MainWrapper>
+      <div class="flex justify-between items-center pr-4">
+        <h1 className="text-3xl mb-6 mt-8 text-gray-700">
+          {t("caregiver.createCaregiver")}
+        </h1>
+        <Steps
+          activeStep={step()}
+          steps={STEPS}
+          setActiveStep={handleStepChange}
+          completedSteps={completedSteps()}
+          style="margin-top: 2rem"
+        />
+      </div>
+
       <Switch>
         <Match when={step() === 1}>
           <CaregiverPersonalInfo

@@ -45,7 +45,7 @@ export const SelectMentor: Component<SelectMentorProps> = ({
       <Show when={data() && !data.loading} fallback={<Loader />}>
         <Table class="mt-5">
           <Table.Body>
-            <For each={data()!.mentors}>
+            <For each={data()!.data.mentors}>
               {(mentor) => (
                 <tr
                   className="cursor-pointer hover:bg-gray-200"

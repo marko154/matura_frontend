@@ -1,6 +1,13 @@
 import { useI18n } from "@amoutonbrady/solid-i18n";
 import { useNavigate } from "solid-app-router";
-import { Component, createResource, createSignal, For, Show } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createResource,
+  createSignal,
+  For,
+  Show,
+} from "solid-js";
 import { createStore } from "solid-js/store";
 import { deleteMentor, getMentors, Response, QueryParams } from "../../http/mentors";
 import { formatDate } from "../../utils/strings.utils";
@@ -52,7 +59,7 @@ const Mentors: Component = () => {
     }
     setUserDeleteId(null);
   };
-
+  createEffect(() => console.log(data()));
   return (
     <MainWrapper title={t("sidebar.mentors")}>
       <div className="flex justify-between">
@@ -77,14 +84,14 @@ const Mentors: Component = () => {
               <Table.Th>{t("email")}</Table.Th>
               <Table.Th>{t("firstName")}</Table.Th>
               <Table.Th>{t("lastName")}</Table.Th>
-              <Table.Th>{t("gender")}</Table.Th>
+              {/* <Table.Th>{t("gender")}</Table.Th> */}
               <Table.Th>{t("phoneNumber")}</Table.Th>
               <Table.Th>{t("dateOfBirth")}</Table.Th>
               <Table.Th></Table.Th>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            <For each={data()!.mentors}>
+            <For each={data()!.data.mentors}>
               {(mentor) => (
                 <Table.Row
                   class="cursor-pointer"
@@ -100,7 +107,7 @@ const Mentors: Component = () => {
                   <Table.Td>
                     <SearchedText search={params.search} text={mentor.last_name} />
                   </Table.Td>
-                  <Table.Td>{mentor.gender}</Table.Td>
+                  {/* <Table.Td>{mentor.gender}</Table.Td> */}
                   <Table.Td>
                     <a href={`tel:${mentor.phone_number}`}>{mentor.phone_number}</a>
                   </Table.Td>
@@ -119,7 +126,7 @@ const Mentors: Component = () => {
           </Table.Body>
         </Table>
         <Pagination
-          totalPages={Math.ceil(data()!.total / 10)}
+          totalPages={Math.ceil(data()!.data.total / 10)}
           activePage={params.page}
           onPageChange={(page) => setParams("page", page)}
           className="mx-auto py-10"

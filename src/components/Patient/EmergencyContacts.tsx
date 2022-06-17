@@ -30,7 +30,8 @@ export const EmergencyContacts: Component = () => {
     setState("contact", e.target.name, e.target.value);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
     try {
       await addContacts(params.id, [{ ...state.contact, patient_id: Number(params.id) }]);
       setState("adding", false);
@@ -40,8 +41,8 @@ export const EmergencyContacts: Component = () => {
         email: "",
         phone_number: "",
       });
-      toast({ text: "Successfully added" });
       refetch();
+      toast({ text: "Successfully added" });
     } catch (err) {
       toast({ text: "There was an error" });
     }
@@ -117,44 +118,46 @@ export const EmergencyContacts: Component = () => {
 
       <Modal open={state.adding} onClose={() => setState("adding", false)}>
         <h3 class="text-xl mb-4 font-bold">Add an Emergency Contact</h3>
-        <div class="flex flex-col gap-2">
-          <div class="flex gap-2">
+        <form>
+          <div class="flex flex-col gap-2">
+            <div class="flex gap-2">
+              <Input
+                version="secondary"
+                label="First Name"
+                onInput={handleChange}
+                name="first_name"
+              />
+              <Input
+                version="secondary"
+                label="Last Name"
+                onInput={handleChange}
+                name="last_name"
+              />
+            </div>
             <Input
+              type="email"
+              label="Email"
+              name="email"
               version="secondary"
-              label="First Name"
               onInput={handleChange}
-              name="first_name"
             />
             <Input
+              type="tel"
+              label="Phone Number"
               version="secondary"
-              label="Last Name"
+              name="phone_number"
               onInput={handleChange}
-              name="last_name"
             />
           </div>
-          <Input
-            type="email"
-            label="Email"
-            name="email"
-            version="secondary"
-            onInput={handleChange}
-          />
-          <Input
-            type="tel"
-            label="Phone Number"
-            version="secondary"
-            name="phone_number"
-            onInput={handleChange}
-          />
-        </div>
-        <div class="flex justify-end gap-3 mt-6">
-          <Button action="secondary" onClick={() => setState("adding", false)}>
-            Cancel
-          </Button>
-          <Button disabled={!canSubmit()} onClick={handleSubmit}>
-            Save
-          </Button>
-        </div>
+          <div class="flex justify-end gap-3 mt-6">
+            <Button action="secondary" onClick={() => setState("adding", false)}>
+              Cancel
+            </Button>
+            <Button disabled={!canSubmit()} onClick={handleSubmit}>
+              Save
+            </Button>
+          </div>
+        </form>
       </Modal>
     </>
   );

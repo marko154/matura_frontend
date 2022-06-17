@@ -22,6 +22,8 @@ import { Button } from "../common/Button/Button";
 import { TextArea } from "../common/Textarea/TextArea";
 import { toast } from "../common/Toast/Toast";
 import { createSession } from "../../http/sessions";
+import { Input } from "../common/Input/Input";
+import { isAvailable } from "../../utils/schedualing.utils";
 
 mapboxgl.accessToken = import.meta.env.SOLID_APP_MAPBOX_API_KEY;
 
@@ -72,15 +74,19 @@ const Map: Component<MapProps> = ({
     directions.setDestination([selectedCaregiver.long, selectedCaregiver.lat]);
   });
 
+  let map: mapboxgl.Map;
+
   onMount(() => {
-    const map = new mapboxgl.Map({
+    map = new mapboxgl.Map({
       container: "map", // container ID
       style: "mapbox://styles/mapbox/streets-v11", // style URL
       center: patient.location.coordinates, // starting position [lng, lat]
       zoom: 8, // starting zoom
     });
     map.addControl(directions, "top-left");
+  });
 
+  createEffect(() => {
     // add markers to map
     for (const caregiver of caregivers) {
       // create a HTML element for each feature
@@ -121,12 +127,32 @@ type Props = {
 };
 // TODO: scroll to selected user onchange on map select
 export const AssignCaregiver: Component<Props> = ({ patient }) => {
-  const [caregivers, {}] = createResource<CaregiverWithLocation[], string>(
-    patient.location_id,
-    getClosestCaregivers
-  );
+  // const [caregivers, {}] = createResource<CaregiverWithLocation[], string>(
+  //   patient.location_id,
+  //   getClosestCaregivers
+  // );
+
+  const [caregivers, setCaregivers] = createSignal<any[]>([]);
+  const [caregiversLoading, setCaregiversLoading] = createSignal(false);
+  const [done, setDone] = createSignal(false);
+  const [error, setError] = createSignal<any>(null);
+  const [offset, setOffset] = createSignal(0);
+
+  createEffect(async () => {
+    setCaregiversLoading(true);
+    try {
+      const newCaregivers = await getClosestCaregivers(patient.location_id!, offset());
+      setCaregivers([...caregivers(), ...newCaregivers]);
+      if (newCaregivers.length < 10) setDone(true);
+    } catch (err) {
+      setError(err);
+    }
+    setCaregiversLoading(false);
+  });
+
   const [selected, setSelected] = createSignal<CaregiverWithLocation | null>(null);
   const [notes, setNotes] = createSignal("");
+  const [duration, setDuration] = createSignal("01:00");
   const [loading, setLoading] = createSignal(false);
 
   const handleAssign = async () => {
@@ -135,6 +161,7 @@ export const AssignCaregiver: Component<Props> = ({ patient }) => {
       await createSession({
         caregiver_id: selected()!.caregiver_id,
         notes: notes(),
+        duration: duration(),
         patient_id: patient.patient_id,
       });
       toast({ text: "Successfully assigned" });
@@ -145,6 +172,7 @@ export const AssignCaregiver: Component<Props> = ({ patient }) => {
   };
 
   createEffect(() => {
+    console.log(caregivers());
     if (caregivers()) {
       setSelected(caregivers()![0]);
     }
@@ -152,14 +180,14 @@ export const AssignCaregiver: Component<Props> = ({ patient }) => {
 
   return (
     <>
-      {caregivers.loading ? (
+      {caregiversLoading() && offset() === 0 ? (
         <Loader />
-      ) : caregivers.error || !caregivers() ? (
+      ) : error() ? (
         <Message type="error">There was an error</Message>
       ) : (
         <div class="flex">
           <Map
-            caregivers={caregivers()!}
+            caregivers={caregivers()}
             selectedCaregiver={selected()}
             patient={patient}
             setSelectedCaregiver={setSelected}
@@ -174,10 +202,18 @@ export const AssignCaregiver: Component<Props> = ({ patient }) => {
                   caregiver.caregiver_id === selected()?.caregiver_id;
                 return (
                   <div
-                    class="py-5 px-4 hover:bg-gray-100 flex cursor-pointer"
+                    class="py-5 px-4 hover:bg-gray-100 flex cursor-pointer relative w-full"
                     onClick={() => setSelected(caregiver)}
                     classList={{ "bg-gray-100": isSelected() }}
                   >
+                    <a
+                      href={"/caregiver/" + caregiver.caregiver_id}
+                      target="_blank"
+                      class="absolute top-2 right-2 hover:bg-gray-200 px-2 rounded"
+                    >
+                      <Icon name="subdirectory_arrow_right" />
+                    </a>
+
                     <Avatar imageURL={undefined} />
                     <div class="ml-4 items-center">
                       <div class="text-lg">{`${caregiver.first_name} ${caregiver.last_name}`}</div>
@@ -187,7 +223,20 @@ export const AssignCaregiver: Component<Props> = ({ patient }) => {
                       </div>
                       {isSelected() && (
                         <div class="mt-4 mb-3">
+                          <div class="uppercase mb-3">
+                            {isAvailable(caregiver.availibilities)
+                              ? "Currently Available"
+                              : "Currently Unavailable"}
+                          </div>
+                          <Input
+                            type="time"
+                            version="secondary"
+                            label="Expected Duration"
+                            value={duration()}
+                            onChange={(e) => setDuration(e.currentTarget.value)}
+                          />
                           <TextArea
+                            className="mt-2"
                             version="secondary"
                             placeholder="Details about the session..."
                             onInput={(e) => setNotes(e.currentTarget.value)}
@@ -207,9 +256,14 @@ export const AssignCaregiver: Component<Props> = ({ patient }) => {
                 );
               }}
             </For>
-            <button class="rounded bg-gray-100 py-4 w-full items-center">
-              Load More
-            </button>
+            {!done() && (
+              <button
+                class="rounded bg-gray-100 py-4 h-16 w-full items-center relative outline-none"
+                onClick={() => setOffset(offset() + 10)}
+              >
+                {caregiversLoading() ? <Loader /> : "Load More"}
+              </button>
+            )}
           </aside>
         </div>
       )}

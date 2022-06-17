@@ -1,22 +1,21 @@
 import { useI18n } from "@amoutonbrady/solid-i18n";
 import { NavLink } from "solid-app-router";
-import { Component, createMemo, createSignal, For } from "solid-js";
+import { Component, createMemo, createSignal, For, onMount } from "solid-js";
 import { ROLE_SIDEMENU } from "../../constants/sidemenu";
 import { useAuth } from "../../context/AuthProvider";
-import { clickOutside } from "../../hooks/clickOutside";
+import { useClickOutside } from "../../hooks/clickOutside";
 import createMediaQuery from "../../hooks/createMediaQuery";
 import { Avatar } from "../common/Avatar";
 import { Icon } from "../common/Icon";
 import "./Sidemenu.css";
 
 export const Sidemenu: Component = () => {
-  const [auth, { logout }] = useAuth();
+  const [auth] = useAuth();
   // const [width, setWidth] = createSignal(250); // TODO: make menu resizable
   const [isCollapsed, setIsCollapsed] = createSignal(false);
   const isSmall = createMediaQuery("(max-width: 1200px)");
   const isMobile = createMediaQuery("(max-width: 700px)");
-  const [t, { locale }] = useI18n();
-  const [actionsMenuOpen, setActionsMenuOpen] = createSignal(false);
+  const [t] = useI18n();
 
   const sidemenu = createMemo(() => {
     if (!auth.user?.user_type_id) return [];
@@ -31,35 +30,9 @@ export const Sidemenu: Component = () => {
         "sidemenu-mobile": isMobile(),
       }}
     >
-      <div className="mx-5 mb-7 mt-3">
+      <div className="ml-5 mr-4 mb-7 mt-3">
         <div className="flex justify-end">
-          <div class="" onClick={() => setActionsMenuOpen(true)}>
-            <Icon name="settings" />
-          </div>
-          {actionsMenuOpen() && (
-            <div
-              class="absolute bg-gray-200 w-40 rounded text-gray-900 shadow-sm z-10 p-2"
-              style="left: calc(100% - 0.5rem);"
-              // use:clickOutside={() => setActionsMenuOpen(false)}
-            >
-              <div>
-                Language
-                <Icon
-                  name="translate"
-                  className="cursor-pointer"
-                  onClick={() => locale(locale() === "en" ? "sl" : "en")}
-                />
-              </div>
-              <div>
-                Log out
-                <Icon
-                  onClick={() => logout()}
-                  className="rotate-180 cursor-pointer"
-                  name="logout"
-                />
-              </div>
-            </div>
-          )}
+          <SettingsMenu />
         </div>
         <div className="flex gap-x-1 truncate -mt-2">
           <Avatar imageURL={auth.user?.avatar_url} className="mr-3" />
@@ -102,3 +75,56 @@ export const Sidemenu: Component = () => {
     </menu>
   );
 };
+
+function SettingsMenu({}) {
+  const [actionsMenuOpen, setActionsMenuOpen] = createSignal(false);
+  const [languageOpen, setLanguageOpen] = createSignal(false);
+  const [t, { locale }] = useI18n();
+  const [, { logout }] = useAuth();
+  let menuRef!: HTMLDivElement;
+
+  onMount(() => {
+    useClickOutside(menuRef, () => {
+      if (actionsMenuOpen()) {
+        setActionsMenuOpen(false);
+      }
+    });
+  });
+
+  return (
+    <>
+      <div
+        class="hover:bg-white/10 px-1 rounded flex items-center cursor-pointer"
+        onClick={() => setActionsMenuOpen(true)}
+      >
+        <Icon name="settings" />
+      </div>
+      <div
+        class="absolute bg-gray-200 w-40 rounded text-gray-900 shadow-sm z-10 transition-all"
+        style={{
+          left: "calc(100% - 0.5rem)",
+          "pointer-events": actionsMenuOpen() ? "all" : "none",
+          opacity: actionsMenuOpen() ? 1 : 0,
+          transform: actionsMenuOpen() ? "scale(1)" : "scale(0.9)",
+          "transform-origin": "top left",
+        }}
+        ref={menuRef}
+      >
+        <div
+          class="flex justify-between cursor-pointer py-2 px-2 hover:bg-gray-300 rounded"
+          onClick={() => locale(locale() === "en" ? "sl" : "en")}
+        >
+          Language
+          <Icon name="translate" />
+        </div>
+        <div
+          onClick={() => logout()}
+          class="flex justify-between cursor-pointer py-2 px-2 hover:bg-gray-300 rounded"
+        >
+          Log out
+          <Icon className="rotate-180" name="logout" />
+        </div>
+      </div>
+    </>
+  );
+}

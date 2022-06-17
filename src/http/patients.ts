@@ -22,8 +22,8 @@ export const getPatients = async (params: QueryParams): Promise<Response> => {
   });
 };
 
-export const getClosestCaregivers = async (location_id: string) => {
-  return await client(`patient/${location_id}/closest-caregivers`);
+export const getClosestCaregivers = async (location_id: string, offset: number) => {
+  return await client(`patient/${location_id}/closest-caregivers?offset=${offset}`);
 };
 
 export const getSessions = async (

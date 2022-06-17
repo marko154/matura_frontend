@@ -7,7 +7,7 @@ import { TextArea } from "../common/Textarea/TextArea";
 import { Button } from "../common/Button/Button";
 import { checkEmailAvailable } from "../../http/auth";
 import { isValidEmail } from "../../utils/strings.utils";
-import { getAge } from "../../utils/date.utils";
+import { getAge, toDateInputValue } from "../../utils/date.utils";
 import { checkEmsoAvailable } from "../../http/caregivers";
 
 type Props = JSX.IntrinsicElements["form"] & {
@@ -73,6 +73,10 @@ export const CaregiverPersonalInfo: Component<Props> = ({
   function ageValid() {
     return getAge(caregiver.date_of_birth) >= 18;
   }
+
+  const getMaxDate = () => {
+    return new Date(new Date().setFullYear(new Date().getFullYear() - 18));
+  };
 
   const emailIcon = () => {
     const { available } = emailAvailable;
@@ -149,6 +153,7 @@ export const CaregiverPersonalInfo: Component<Props> = ({
             ? t("dateOfBirth") + " - Age has to be 18 or more"
             : t("dateOfBirth")
         }
+        max={toDateInputValue(getMaxDate())}
         onInput={handleChange}
         name="date_of_birth"
         version="secondary"

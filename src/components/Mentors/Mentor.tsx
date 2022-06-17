@@ -33,6 +33,7 @@ import { Table } from "../common/Table/Table";
 import { Tabs } from "../common/Tabs";
 import { toast } from "../common/Toast/Toast";
 import createDebounce from "@solid-primitives/debounce";
+import { Pagination } from "../common/Pagination";
 
 const Segment: Component<{ title: string }> = ({ title, children }) => {
   return (
@@ -188,10 +189,10 @@ const MentorCaregivers: Component = () => {
           There was an error
         </Message>
       </Match>
-      <Match when={caregivers() && caregivers().length === 0}>
+      <Match when={caregivers().data && caregivers().data.length === 0}>
         <Message className="mt-4">{t("mentor.noCaregiversAssigned")}</Message>
       </Match>
-      <Match when={caregivers() && caregivers().length > 0}>
+      <Match when={caregivers().data && caregivers().data.length > 0}>
         <Table className="my-8">
           <Table.Header>
             <Table.Row>
@@ -204,7 +205,7 @@ const MentorCaregivers: Component = () => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            <For each={caregivers()}>
+            <For each={caregivers().data}>
               {(caregiver: any) => (
                 <Table.Row
                   class="cursor-pointer"
@@ -256,6 +257,7 @@ const AssignCaregiver: Component<{ mentorId: string }> = ({ mentorId }) => {
 
   createEffect(() => {
     console.log(data());
+    console.log(params.type);
   });
 
   const handleCheck = (caregiver: any, checked: boolean) => {
@@ -377,11 +379,11 @@ const Mentor: Component = () => {
     <MainWrapper>
       <Show when={!mentor.loading} fallback={<Loader />}>
         <div className="flex mt-8 mb-11 gap-9 items-center">
-          <Avatar imageURL={mentor()!.user.avatar_url} size="w-20 h-20" />
+          <Avatar imageURL={mentor()!.data.user.avatar_url} size="w-20 h-20" />
           <div>
             <h1 className="text-2xl text-gray-700">
-              {mentor()!.user.display_name ||
-                `${mentor()!.first_name} ${mentor()!.last_name}`}
+              {mentor()!.data.user.display_name ||
+                `${mentor()!.data.first_name} ${mentor()!.data.last_name}`}
             </h1>
             <div class="uppercase">{t("mentor.mentor")}</div>
           </div>
@@ -392,7 +394,7 @@ const Mentor: Component = () => {
               title: t("mentor.accountInfo"),
               route: "/account",
               element: () => (
-                <AccountInfo mentor={mentor()!} refetchMentor={updateMentor} />
+                <AccountInfo mentor={mentor()!.data} refetchMentor={updateMentor} />
               ),
             },
             {

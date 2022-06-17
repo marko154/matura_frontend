@@ -9,6 +9,7 @@ import { getErrorMessage } from "../utils/errors";
 import { Message } from "./common/Message/Message";
 import { Loader } from "./common/Loader/Loader";
 import { useAuth } from "../context/AuthProvider";
+import { toast } from "./common/Toast/Toast";
 
 const MIN_PASSWORD_LENGTH = 10;
 
@@ -38,6 +39,7 @@ const SignUp = () => {
       setState("loading", true);
       const user = await auth.register(state);
       navigate("/");
+      toast({ text: "Successfully registered" });
     } catch (err) {
       setState("error", getErrorMessage(err));
     }

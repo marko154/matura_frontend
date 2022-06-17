@@ -11,6 +11,7 @@ import { Message } from "../common/Message/Message";
 import { Pagination } from "../common/Pagination";
 import { Table } from "../common/Table/Table";
 import { formatDate } from "../../utils/strings.utils";
+import { toTimeInputValue } from "../../utils/date.utils";
 
 const Sessions: Component = () => {
   const [t] = useI18n();
@@ -67,6 +68,7 @@ const Sessions: Component = () => {
                     <Table.Th>Patient</Table.Th>
                     <Table.Th>Caregiver</Table.Th>
                     <Table.Th>Date</Table.Th>
+                    <Table.Th>Duration</Table.Th>
                     <Table.Th>Notes</Table.Th>
                   </Table.Row>
                 </Table.Header>
@@ -91,6 +93,10 @@ const Sessions: Component = () => {
                           </Link>
                         </Table.Td>
                         <Table.Td>{formatDate(session.start_time)}</Table.Td>
+                        <Table.Td>
+                          {session.duration &&
+                            toTimeInputValue(session.duration).substring(0, 5)}
+                        </Table.Td>
                         <Table.Td>{session.notes}</Table.Td>
                       </Table.Row>
                     )}

@@ -20,12 +20,17 @@ import { Pagination } from "../common/Pagination";
 import { Icon } from "../common/Icon";
 import { createStore } from "solid-js/store";
 import { Input } from "../common/Input/Input";
+import { Message } from "../common/Message/Message";
+import { useAuth } from "../../context/AuthProvider";
+import { isAdmin } from "../../utils/roles.utils";
+import createDebounce from "@solid-primitives/debounce";
 
 const CaregiverRow: Component<{ caregiver: any; refetch: () => void }> = ({
   caregiver,
   refetch,
 }) => {
   const navigate = useNavigate();
+  const [{ user }] = useAuth();
   const [userDeleteId, setUserDeleteId] = createSignal<number | null>(null);
   const [t] = useI18n();
 
@@ -64,7 +69,7 @@ const CaregiverRow: Component<{ caregiver: any; refetch: () => void }> = ({
   return (
     <>
       <Table.Row class="cursor-pointer" onClick={() => redirect(caregiver.caregiver_id)}>
-        <Table.Td>{caregiver.user.user_id}</Table.Td>
+        <Table.Td>{caregiver.caregiver_id}</Table.Td>
         <Table.Td>{caregiver.user.email}</Table.Td>
         <Table.Td>{caregiver.first_name}</Table.Td>
         <Table.Td>{caregiver.last_name}</Table.Td>
@@ -82,14 +87,20 @@ const CaregiverRow: Component<{ caregiver: any; refetch: () => void }> = ({
           )}
         </Table.Td>
         <Table.Td>{formatDate(caregiver.date_of_birth)}</Table.Td>
-        <Table.Td class="flex gap-1">
-          <Button action="secondary" className="p-0 w-10 h-10" onClick={handleEditClick}>
-            <Icon name={state.editing ? "close" : "edit"} size="text-xl" />
-          </Button>
-          <Button className="p-0 w-10 h-10" onClick={(e) => handleDeleteClick(e)}>
-            <Icon name={state.editing ? "done" : "delete_outline"} size="text-xl" />
-          </Button>
-        </Table.Td>
+        {isAdmin(user!) && (
+          <Table.Td class="flex gap-1">
+            <Button
+              action="secondary"
+              className="p-0 w-10 h-10"
+              onClick={handleEditClick}
+            >
+              <Icon name={state.editing ? "close" : "edit"} size="text-xl" />
+            </Button>
+            <Button className="p-0 w-10 h-10" onClick={(e) => handleDeleteClick(e)}>
+              <Icon name={state.editing ? "done" : "delete_outline"} size="text-xl" />
+            </Button>
+          </Table.Td>
+        )}
       </Table.Row>
       <Modal open={userDeleteId() !== null}>
         <h2 className="mb-8 text-lg">{t("confirmationNote")}</h2>
@@ -107,8 +118,13 @@ const CaregiverRow: Component<{ caregiver: any; refetch: () => void }> = ({
 const CaregiversTable: Component = ({}) => {
   const navigate = useNavigate();
   const [t] = useI18n();
-  const [page, setPage] = createSignal(1);
-  const [data, { refetch }] = createResource(page, getCaregivers);
+  const [params, setParams] = createStore({ page: 1, search: "" });
+  const [data, { refetch }] = createResource(() => ({ ...params }), getCaregivers);
+
+  const [setSearch, clear] = createDebounce(
+    (search) => setParams("search", search as string),
+    500
+  );
 
   const redirectCreate = () => {
     navigate("/caregiver/create");
@@ -117,39 +133,55 @@ const CaregiversTable: Component = ({}) => {
   createEffect(() => console.log(data()));
   return (
     <>
-      <Button className="ml-auto block" onClick={redirectCreate}>
-        Create a Caregiver
-      </Button>
-      <Show when={data()} fallback={<Loader />}>
-        <Table className="mt-3">
-          <Table.Header>
-            <Table.Row>
-              <Table.Th>ID</Table.Th>
-              <Table.Th>{t("email")}</Table.Th>
-              <Table.Th>{t("firstName")}</Table.Th>
-              <Table.Th>{t("lastName")}</Table.Th>
-              {/* <Table.Th>{t("gender")}</Table.Th> */}
-              <Table.Th>{t("phoneNumber")}</Table.Th>
-              <Table.Th>{t("dateOfBirth")}</Table.Th>
-              <Table.Th></Table.Th>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <For each={data()!.caregivers}>
-              {(caregiver: any) => (
-                <CaregiverRow caregiver={caregiver} refetch={refetch} />
-              )}
-            </For>
-          </Table.Body>
-        </Table>
-
-        <Pagination
-          className="mx-auto py-10"
-          totalPages={Math.ceil(data()!.total / 10)}
-          activePage={page()}
-          onPageChange={setPage}
+      <div className="flex justify-between">
+        <Input
+          className="w-80"
+          version="secondary"
+          placeholder={t("searchBy")}
+          onInput={(e) => setSearch(e.currentTarget.value)}
+          icon="search"
+          autofocus
         />
-      </Show>
+        <Button className="ml-auto block" onClick={redirectCreate}>
+          {t("caregiver.createCaregiver")}
+        </Button>
+      </div>
+      {data.loading || !data() ? (
+        <Loader />
+      ) : data().caregivers.length === 0 ? (
+        <Message className="mt-4">No caregivers found</Message>
+      ) : (
+        <>
+          <Table className="mt-3">
+            <Table.Header>
+              <Table.Row>
+                <Table.Th>ID</Table.Th>
+                <Table.Th>{t("email")}</Table.Th>
+                <Table.Th>{t("firstName")}</Table.Th>
+                <Table.Th>{t("lastName")}</Table.Th>
+                {/* <Table.Th>{t("gender")}</Table.Th> */}
+                <Table.Th>{t("phoneNumber")}</Table.Th>
+                <Table.Th>{t("dateOfBirth")}</Table.Th>
+                <Table.Th></Table.Th>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              <For each={data()!.caregivers}>
+                {(caregiver: any) => (
+                  <CaregiverRow caregiver={caregiver} refetch={refetch} />
+                )}
+              </For>
+            </Table.Body>
+          </Table>
+
+          <Pagination
+            className="mx-auto py-10"
+            totalPages={Math.ceil(data()!.total / 10)}
+            activePage={params.page}
+            onPageChange={(page) => setParams("page", page)}
+          />
+        </>
+      )}
     </>
   );
 };

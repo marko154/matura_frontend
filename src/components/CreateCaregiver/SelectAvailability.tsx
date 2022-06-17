@@ -2,6 +2,7 @@ import { useI18n } from "@amoutonbrady/solid-i18n";
 import { useNavigate } from "solid-app-router";
 import { Component, createSignal, For, JSX } from "solid-js";
 import { createStore } from "solid-js/store";
+import { DAYS } from "../../constants/datetime.constants";
 import { createCaregiver } from "../../http/caregivers";
 import { getDay, toDateInputValue } from "../../utils/date.utils";
 import { formatDate } from "../../utils/strings.utils";
@@ -21,9 +22,7 @@ export type AvailibilityFields = {
   }[];
 };
 
-const DAYS = ["M", "T", "W", "Th", "F", "Sa", "S"];
-
-const AddAvailibility: Component<{ add: (av: AvailibilityFields) => void }> = ({
+export const AddAvailibility: Component<{ add: (af: AvailibilityFields) => void }> = ({
   add,
 }) => {
   const [t] = useI18n();
@@ -72,7 +71,7 @@ const AddAvailibility: Component<{ add: (av: AvailibilityFields) => void }> = ({
 
   return (
     <section class="rounded border w-fit py-7 px-8 text-gray-700">
-      <h2 class="text-xl">Availibility</h2>
+      <h2 class="text-xl mt-2 mb-4">New Availibility</h2>
       <div class="grid max-w-lg" style="grid-template-columns: 10rem 1fr; gap: 1rem;">
         <div class="text-right px-3 py-2">Repeats: </div>
         <div class="flex items-center">
@@ -267,7 +266,7 @@ export const SelectAvailibility: Component<SelectAvailibilityProps> = ({
 
   return (
     <div>
-      <div class="flex gap-3 justify-end">
+      <div class="flex gap-3 justify-end mt-5">
         <Button onClick={() => setStep(3)} action="secondary">
           {t("back")}
         </Button>

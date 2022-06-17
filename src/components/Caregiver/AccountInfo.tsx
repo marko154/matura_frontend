@@ -1,7 +1,9 @@
 import { useI18n } from "@amoutonbrady/solid-i18n";
 import { Component, JSX } from "solid-js";
 import { createStore } from "solid-js/store";
+import { useAuth } from "../../context/AuthProvider";
 import { updateCaregiver } from "../../http/caregivers";
+import { isAdmin } from "../../utils/roles.utils";
 import { formatDate } from "../../utils/strings.utils";
 import { Button } from "../common/Button/Button";
 import { Input } from "../common/Input/Input";
@@ -29,6 +31,7 @@ export const AccountInfo: Component<AccountInfoProps> = ({
   refetchCaregiver,
 }) => {
   const [t] = useI18n();
+  const [{ user }] = useAuth();
   const initialState = {
     first_name: caregiver.first_name,
     last_name: caregiver.last_name,
@@ -78,12 +81,21 @@ export const AccountInfo: Component<AccountInfoProps> = ({
     <div class="mb-9">
       <div className="flex justify-end pt-9 pb-2 gap-3">
         <h2 className="mr-auto text-lg text-gray-700 ml-7">{t("mentor.personalInfo")}</h2>
-        <Button action="secondary" disabled={!wereChangesMade()} onClick={handleCancel}>
-          {t("cancel")}
-        </Button>
-        <Button disabled={!wereChangesMade()} onClick={handleSaveChanges}>
-          {t("saveChanges")}
-        </Button>
+
+        {isAdmin(user!) && (
+          <>
+            <Button
+              action="secondary"
+              disabled={!wereChangesMade()}
+              onClick={handleCancel}
+            >
+              {t("cancel")}
+            </Button>
+            <Button disabled={!wereChangesMade()} onClick={handleSaveChanges}>
+              {t("saveChanges")}
+            </Button>
+          </>
+        )}
       </div>
       <Segment title={t("user.emailAddress")}>
         <Input
@@ -101,12 +113,14 @@ export const AccountInfo: Component<AccountInfoProps> = ({
           name="first_name"
           value={state.first_name}
           onInput={handleChange}
+          disabled={!isAdmin(user!)}
         />
         <Input
           version="secondary"
           name="last_name"
           value={state.last_name}
           onInput={handleChange}
+          disabled={!isAdmin(user!)}
         />
       </Segment>
 
@@ -126,7 +140,11 @@ export const AccountInfo: Component<AccountInfoProps> = ({
       </Segment>
 
       <Segment title={t("user.dateOfBirth")}>
-        <Input version="secondary" value={formatDate(caregiver.date_of_birth)} />
+        <Input
+          version="secondary"
+          value={formatDate(caregiver.date_of_birth)}
+          disabled={!isAdmin(user!)}
+        />
       </Segment>
 
       <Segment title={t("user.phoneNumber")}>
@@ -136,6 +154,7 @@ export const AccountInfo: Component<AccountInfoProps> = ({
           name="phone_number"
           value={state.phone_number}
           onInput={handleChange}
+          disabled={!isAdmin(user!)}
         />
       </Segment>
       <Segment title={t("user.authentication")}>

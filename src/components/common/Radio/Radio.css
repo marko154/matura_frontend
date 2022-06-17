@@ -8,7 +8,7 @@
 
 .radio .outer {
   @apply relative inline-flex justify-center transition-all
-    items-center p-2 rounded-full hover:bg-blue-50 mr-1;
+    items-center p-2 rounded-full hover:bg-blue-50;
 }
 
 .radio input {

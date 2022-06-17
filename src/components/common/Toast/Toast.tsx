@@ -15,27 +15,29 @@ const [state, setState] = createStore<{ messages: Message[] }>({
 });
 
 let toast = function (newMessage: { text: string }) {
-  const id = generateUniqueID();
-  const first = parent.offsetHeight;
+  try {
+    const id = generateUniqueID();
+    const first = parent.offsetHeight;
 
-  setState("messages", [...state.messages, { text: newMessage.text, id }]);
+    setState("messages", [...state.messages, { text: newMessage.text, id }]);
 
-  const last = parent.offsetHeight;
-  const invert = last - first;
-  const animation = parent.animate(
-    [{ transform: `translateY(${invert}px)` }, { transform: "translateY(0)" }],
-    {
-      duration: 150,
-      easing: "ease-out",
-    }
-  );
-
-  setTimeout(() => {
-    setState(
-      "messages",
-      state.messages.filter((message) => message.id !== id)
+    const last = parent.offsetHeight;
+    const invert = last - first;
+    const animation = parent.animate(
+      [{ transform: `translateY(${invert}px)` }, { transform: "translateY(0)" }],
+      {
+        duration: 150,
+        easing: "ease-out",
+      }
     );
-  }, 5000);
+
+    setTimeout(() => {
+      setState(
+        "messages",
+        state.messages.filter((message) => message.id !== id)
+      );
+    }, 5000);
+  } catch (err) {}
 };
 export const ToastContainer: Component = () => {
   return (
