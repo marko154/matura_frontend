@@ -86,7 +86,7 @@ const publicOnlyRoutes: RouteDefinition[] = [
     component: SignIn,
   },
   {
-    path: "/reset-password/:token",
+    path: "/reset-password",
     component: ResetPassword,
   },
 ].map((route) => ({

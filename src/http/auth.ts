@@ -23,6 +23,7 @@ const requestPasswordReset = async (email: string) => {
 const resetPassword = async (token: string, newPassword: string) => {
   return await client("user/reset-password", {
     body: { token, newPassword },
+    method: "PATCH",
   });
 };
 
